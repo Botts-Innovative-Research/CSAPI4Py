@@ -1,3 +1,4 @@
+import requests
 from pydantic import BaseModel, HttpUrl
 
 from conSys.endpoints.endpoints import Endpoint
@@ -7,6 +8,21 @@ from conSys.request_bodies import RequestBody
 class ConnectedSystemAPIRequest(BaseModel):
     url: HttpUrl
     request_body: RequestBody
+    request_method: str = 'GET'
+    headers: dict = None
+
+    def make_request(self):
+        match self.request_method:
+            case 'GET':
+                return requests.get(self.url, params=self.request_body, headers=self.headers)
+            case 'POST':
+                return self.post_request()
+            case 'PUT':
+                return self.put_request()
+            case 'DELETE':
+                return self.delete_request()
+            case _:
+                raise ValueError('Invalid request method')
 
 
 class ConnectedSystemsRequestBuilder(BaseModel):
@@ -58,6 +74,15 @@ class ConnectedSystemsRequestBuilder(BaseModel):
 
     def with_request_body(self, request_body: RequestBody):
         self.api_request.request_body = request_body
+        return self
+
+    def with_request_method(self, request_method: str):
+        self.api_request.request_method = request_method
+        return self
+
+    def with_headers(self, headers: dict = None):
+        # TODO: ensure headers can default if excluded
+        self.api_request.headers = headers
         return self
 
     def build(self):
