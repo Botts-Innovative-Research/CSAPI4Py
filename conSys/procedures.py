@@ -1,0 +1,81 @@
+from pydantic import HttpUrl
+
+from conSys.con_sys_api import ConnectedSystemsRequestBuilder
+from conSys.constants import APITerms
+from conSys.endpoints.endpoints import Endpoint
+
+
+def list_all_procedures(server_addr: HttpUrl, api_root: str = APITerms.API.value):
+    """
+    Lists all procedures in the server at the default API endpoint
+    :return:
+    """
+    builder = ConnectedSystemsRequestBuilder()
+    api_request = (builder.with_server_url(server_addr)
+                   .with_api_root(api_root)
+                   .for_resource_type(APITerms.PROCEDURES.value)
+                   .build_url_from_base()
+                   .build())
+    return api_request
+
+
+def create_new_procedures(server_addr: HttpUrl, request_body: dict, api_root: str = APITerms.API.value):
+    """
+    Create a new procedure as defined by the request body
+    :return:
+    """
+    builder = ConnectedSystemsRequestBuilder()
+    api_request = (builder.with_server_url(server_addr)
+                   .with_api_root(api_root)
+                   .for_resource_type(APITerms.PROCEDURES.value)
+                   .with_request_body(request_body)
+                   .build_url_from_base()
+                   .build())
+    return api_request
+
+
+def retrieve_procedure_by_id(server_addr: HttpUrl, procedure_id: str, api_root: str = APITerms.API.value):
+    """
+    Retrieve a procedure by its ID
+    :return:
+    """
+    builder = ConnectedSystemsRequestBuilder()
+    api_request = (builder.with_server_url(server_addr)
+                   .with_api_root(api_root)
+                   .for_resource_type(APITerms.PROCEDURES.value)
+                   .with_resource_id(procedure_id)
+                   .build_url_from_base()
+                   .build())
+    return api_request
+
+
+def update_procedure_by_id(server_addr: HttpUrl, procedure_id: str, request_body: dict,
+                           api_root: str = APITerms.API.value):
+    """
+    Update a procedure by its ID
+    :return:
+    """
+    builder = ConnectedSystemsRequestBuilder()
+    api_request = (builder.with_server_url(server_addr)
+                   .with_api_root(api_root)
+                   .for_resource_type(APITerms.PROCEDURES.value)
+                   .with_resource_id(procedure_id)
+                   .with_request_body(request_body)
+                   .build_url_from_base()
+                   .build())
+    return api_request
+
+
+def delete_procedure_by_id(server_addr: HttpUrl, procedure_id: str, api_root: str = APITerms.API.value):
+    """
+    Delete a procedure by its ID
+    :return:
+    """
+    builder = ConnectedSystemsRequestBuilder()
+    api_request = (builder.with_server_url(server_addr)
+                   .with_api_root(api_root)
+                   .for_resource_type(APITerms.PROCEDURES.value)
+                   .with_resource_id(procedure_id)
+                   .build_url_from_base()
+                   .build())
+    return api_request

@@ -1,10 +1,28 @@
 from enum import Enum
-import json
 
 import requests
 import websockets
+from pydantic import BaseModel
 
-from pyswapi.constants import APITerms
+from conSys.constants import APITerms
+
+
+class Endpoint(BaseModel):
+    api_root: str = APITerms.API.value
+    base_resource: APITerms
+    resource_id: str = None
+    sub_component: APITerms = None
+    secondary_resource_id: str = None
+
+    def create_endpoint(self):
+        # TODO: Handle insertion of  "/" in the right places
+        # Create endpoints bases of api spec
+        base_res_id = '' if self.base_resource is None else f'/{self.base_resource}'
+        res_id = '' if self.resource_id is None else f'/{self.resource_id}'
+        sub_comp = '' if self.sub_component is None else f'/{self.sub_component}'
+        secondary_res_id = '' if self.secondary_resource_id is None else f'/{self.secondary_resource_id}'
+
+        return f'{self.api_root}{base_res_id}{res_id}{sub_comp}{secondary_res_id}'
 
 
 class SystemQueryParams(Enum):

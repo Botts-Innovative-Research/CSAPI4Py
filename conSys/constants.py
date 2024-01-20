@@ -15,6 +15,11 @@ class APITerms(Enum):
     PROCEDURES = 'procedures'
     DEPLOYMENTS = 'deployments'
     PROPERTIES = 'properties'
+    UNDEFINED = ''
+    COLLECTIONS = 'collections'
+    ITEMS = 'items'
+    COMPONENTS = 'components'
+    CONFORMANCE = 'conformance'
 
 
 class SystemTypes(Enum):
