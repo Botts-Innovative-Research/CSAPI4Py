@@ -1,4 +1,15 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, Field
+
+
+class TypeOf(BaseModel):
+    href: HttpUrl
+    rel: str = None
+    media_type: str = Field(None, serialization_alias='type')
+    href_lang: str = Field(None, serialization_alias='hreflang')
+    title: str = None
+    uid: str = None
+    target_resource: str = Field(None, serialization_alias='rt')
+    interface: str = Field(None, serialization_alias='if')
 
 
 class SensorML(BaseModel):
@@ -19,7 +30,7 @@ class SensorML(BaseModel):
     documents: list = None
     history: list = None
     definition: HttpUrl = None
-    type_of: Link2 = None
+    type_of: TypeOf = None
     configuration: HttpUrl = None
     features_of_interest: list = None
     inputs: list = None
@@ -28,14 +39,3 @@ class SensorML(BaseModel):
     modes: list = None
     method: str = None
     position: list = None
-
-
-class TypeOf(BaseModel):
-    href: HttpUrl
-    rel: str = None
-    media_type: str = None
-    href_lang: str = None
-    title: str = None
-    uid: str = None
-    target_resource: str = None
-    interface: str = None

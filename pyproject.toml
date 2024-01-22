@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tools.setuptools]
+packages = ["conSys"]
+
+[project]
+name = "conSys4Py"
+version = "0.0.1-alpha.1"
+authors = [{name = "Ian Patterson", email = "ian@botts-inc.com"}]
+description = "OGC Connected Systems API client for Python"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    "requests",
+    "pydantic",
+]
+
+[project.urls]
+"Homepage" = "https://opensensorhub.org"

@@ -1,3 +1,4 @@
+import requests
 from pydantic import HttpUrl
 
 from conSys.con_sys_api import ConnectedSystemsRequestBuilder
@@ -16,7 +17,8 @@ def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value):
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def create_new_systems(server_addr: HttpUrl, request_body: dict, api_root: str = APITerms.API.value):
@@ -31,11 +33,15 @@ def create_new_systems(server_addr: HttpUrl, request_body: dict, api_root: str =
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.post(api_request.url, json=api_request.body, headers=api_request.headers)
+    return resp.json()
+
 
 
 def list_all_systems_in_collection(server_addr: HttpUrl, collection_id: str, api_root: str = APITerms.API.value):
     """
+    NOTE: function may not be able to fully represent a request to the API at this time, as the test server lacks a few
+    elements.
     Lists all systems in the server at the default API endpoint
     :return:
     """
@@ -44,10 +50,12 @@ def list_all_systems_in_collection(server_addr: HttpUrl, collection_id: str, api
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.COLLECTIONS.value)
                    .with_resource_id(collection_id)
-                   .for_sub_resource_type(APITerms.ITEMS.value)
+                   # .for_sub_resource_type(APITerms.ITEMS.value)
                    .build_url_from_base()
                    .build())
-    return api_request
+    print(api_request.url)
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def add_systems_to_collection(server_addr: HttpUrl, collection_id: str, uri_list: str,
@@ -65,7 +73,8 @@ def add_systems_to_collection(server_addr: HttpUrl, collection_id: str, uri_list
                    .with_request_body(uri_list)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.post(api_request.url, json=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def retrieve_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -80,7 +89,8 @@ def retrieve_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = 
                    .with_resource_id(system_id)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def update_system_description(server_addr: HttpUrl, system_id: str, request_body: dict,
@@ -97,7 +107,8 @@ def update_system_description(server_addr: HttpUrl, system_id: str, request_body
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.put(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -112,7 +123,8 @@ def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = AP
                    .with_resource_id(system_id)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.delete(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def list_system_components(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -128,7 +140,9 @@ def list_system_components(server_addr: HttpUrl, system_id: str, api_root: str =
                    .for_sub_resource_type(APITerms.COMPONENTS.value)
                    .build_url_from_base()
                    .build())
-    return api_request
+    print(api_request.url)
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def add_system_components(server_addr: HttpUrl, system_id: str, request_body: dict,
@@ -146,7 +160,8 @@ def add_system_components(server_addr: HttpUrl, system_id: str, request_body: di
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .build())
-    return api_request
+    resp = requests.post(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def list_deployments_of_system(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -161,8 +176,10 @@ def list_deployments_of_system(server_addr: HttpUrl, system_id: str, api_root: s
                    .with_resource_id(system_id)
                    .for_sub_resource_type(APITerms.DEPLOYMENTS.value)
                    .build_url_from_base()
+
                    .build())
-    return api_request
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
 
 
 def list_sampling_features_of_system(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -178,4 +195,6 @@ def list_sampling_features_of_system(server_addr: HttpUrl, system_id: str, api_r
                    .for_sub_resource_type(APITerms.SAMPLING_FEATURES.value)
                    .build_url_from_base()
                    .build())
-    return api_request
+    print(api_request.url)
+    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
+    return resp.json()
