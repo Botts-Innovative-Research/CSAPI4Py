@@ -4,13 +4,10 @@ from conSys.sensor_ml.sml import TypeOf
 
 
 class RequestBody(BaseModel):
-    type: str
-    id: str
-    description: str = None
-    # properties: dict = None
-    # geometry: dict = None
-    # bbox: list = None
-    links: list = None
+    type: str = Field(None)
+    id: str = Field(None)
+    description: str = Field(None)
+    links: list = Field(None)
 
 
 class GeoJSONBody(RequestBody):
