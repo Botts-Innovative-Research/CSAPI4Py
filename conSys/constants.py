@@ -20,6 +20,7 @@ class APITerms(Enum):
     ITEMS = 'items'
     COMPONENTS = 'components'
     CONFORMANCE = 'conformance'
+    SCHEMA = 'schema'
 
 
 class SystemTypes(Enum):
