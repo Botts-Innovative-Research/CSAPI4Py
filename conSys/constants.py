@@ -21,6 +21,7 @@ class APITerms(Enum):
     COMPONENTS = 'components'
     CONFORMANCE = 'conformance'
     SCHEMA = 'schema'
+    CONTROL_STREAMS = 'controls'
 
 
 class SystemTypes(Enum):
