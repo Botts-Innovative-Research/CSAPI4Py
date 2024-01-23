@@ -13,7 +13,9 @@ class APITerms(Enum):
     CONTROL_STREAMS = 'controls'
     DATASTREAMS = 'datastreams'
     DEPLOYMENTS = 'deployments'
+    EVENTS = 'events'
     FOIS = 'featuresOfInterest'
+    HISTORY = 'history'
     ITEMS = 'items'
     OBSERVATIONS = 'observations'
     PROCEDURES = 'procedures'
@@ -22,6 +24,7 @@ class APITerms(Enum):
     SCHEMA = 'schema'
     STATUS = 'status'
     SYSTEMS = 'systems'
+    SYSTEM_EVENTS = 'systemEvents'
     TASKING = 'controls'
     UNDEFINED = ''
 
