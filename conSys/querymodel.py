@@ -8,7 +8,7 @@ class QueryModel(BaseModel):
     id: list = None
     bbox: list = None
     date_time: Union[StrictStr, datetime] = Field(None, alias='datetime')
-    geom = None
+    geom: dict = None
     q: list = Optional[List[str]]
     parent: list = None
     procedure: list = None

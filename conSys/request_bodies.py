@@ -1,32 +1,25 @@
-from pydantic import BaseModel, HttpUrl, Field
+from typing import Union
+
+from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel
 
 from conSys.sensor_ml.sml import TypeOf
 
 
-class RequestBody(BaseModel):
-    type: str = Field(None)
-    id: str = Field(None)
-    description: str = Field(None)
-    links: list = Field(None)
-
-
-class GeoJSONBody(RequestBody):
+class GeoJSONBody(BaseModel):
     type: str
     id: str
-    description: str = None
     properties: dict = None
     geometry: dict = None
     bbox: list = None
     links: list = None
 
 
-class SmlJSONBody(RequestBody):
-    # TODO: implement other classes to represent the specifics of certain top-level properties
-    type: str
-    id: str
-    description: str = None
-    unique_id: str = Field(None, serialization_alias='uniqueID')
-    label: str = None
+class SmlJSONBody(BaseModel):
+    system_type: str = Field(None, serialization_alias='type')
+    id: str = Field(None)
+    description: str = Field(None)
+    unique_id: str = Field(..., serialization_alias='uniqueId')
+    label: str = Field(...)
     lang: str = None
     keywords: list = None
     identifiers: list = None
@@ -49,4 +42,31 @@ class SmlJSONBody(RequestBody):
     modes: list = None
     method: str = None
     position: list = None
-    links: list = None
+    links: list = Field(None)
+
+
+class OMJSONBody(BaseModel):
+    datastream_id: str = Field(None, alias="datastream@id")
+    foi_id: str = Field(None, alias="foi@id")
+    phenomenon_time: str = Field(None, alias="phenomenonTime")
+    result_time: str = Field(None, alias="resultTime")
+    parameters: list = Field(None)
+    result: dict = Field(None)
+    result_links: list = Field(None, alias="result@links")
+
+
+class RequestBody(BaseModel):
+    """
+    Wrapper class to support different request json structures
+    """
+    json_structure: Union[GeoJSONBody, SmlJSONBody, OMJSONBody] = Field(..., serialization_alias='json')
+    test_extra: str = Field("Hello, I am test", serialization_alias='testExtra')
+
+    @model_serializer
+    def ser_model(self):
+        print("Serializing model...")
+        return self.json_structure
+
+
+class RequestBodyList(RootModel):
+    root: list[Union[GeoJSONBody, SmlJSONBody, OMJSONBody]] = Field(...)

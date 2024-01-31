@@ -2,26 +2,27 @@ import requests
 from pydantic import BaseModel, HttpUrl, Field
 
 from conSys.endpoints.endpoints import Endpoint
-from conSys.request_bodies import RequestBody
+from conSys.request_wrappers import post_request, put_request, get_request, delete_request
 
 
 class ConnectedSystemAPIRequest(BaseModel):
     url: HttpUrl = Field(None)
-    body: RequestBody = Field(default_factory=RequestBody)
+    body: dict = Field(None)
     params: dict = Field(None)
     request_method: str = Field('GET')
     headers: dict = Field(None)
+    auth: tuple = Field(None)
 
     def make_request(self):
         match self.request_method:
             case 'GET':
-                return requests.get(self.url, params=self.body, headers=self.headers)
+                return get_request(self.url, self.params, self.headers, self.auth)
             case 'POST':
-                return self.post_request()
+                return post_request(self.url, self.body, self.headers, self.auth)
             case 'PUT':
-                return self.put_request()
+                return put_request(self.url, self.body, self.headers, self.auth)
             case 'DELETE':
-                return self.delete_request()
+                return delete_request(self.url, self.params, self.headers, self.auth)
             case _:
                 raise ValueError('Invalid request method')
 
@@ -30,8 +31,6 @@ class ConnectedSystemsRequestBuilder(BaseModel):
     api_request: ConnectedSystemAPIRequest = Field(default_factory=ConnectedSystemAPIRequest)
     base_url: HttpUrl = None
     endpoint: Endpoint = Field(default_factory=Endpoint)
-
-
 
     def with_api_url(self, url: HttpUrl):
         self.api_request.url = url
@@ -75,7 +74,7 @@ class ConnectedSystemsRequestBuilder(BaseModel):
         self.endpoint.secondary_resource_id = resource_id
         return self
 
-    def with_request_body(self, request_body: RequestBody):
+    def with_request_body(self, request_body: str):
         self.api_request.body = request_body
         return self
 
@@ -86,6 +85,10 @@ class ConnectedSystemsRequestBuilder(BaseModel):
     def with_headers(self, headers: dict = None):
         # TODO: ensure headers can default if excluded
         self.api_request.headers = headers
+        return self
+
+    def with_auth(self, uname: str, pword: str):
+        self.api_request.auth = (uname, pword)
         return self
 
     def build(self):

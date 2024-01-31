@@ -1,12 +1,15 @@
+from typing import Union
+
 import requests
 from pydantic import HttpUrl
 
 from conSys.con_sys_api import ConnectedSystemsRequestBuilder
 from conSys.constants import APITerms
 from conSys.endpoints.endpoints import Endpoint
+from conSys.request_wrappers import post_request
 
 
-def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value):
+def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers: dict = None):
     """
     Lists all systems in the server at the default API endpoint
     :return:
@@ -21,7 +24,9 @@ def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value):
     return resp.json()
 
 
-def create_new_systems(server_addr: HttpUrl, request_body: dict, api_root: str = APITerms.API.value):
+def create_new_systems(server_addr: HttpUrl, request_body: Union[str, dict], api_root: str = APITerms.API.value,
+                       uname: str = None,
+                       pword: str = None, headers: dict = None):
     """
     Create a new system as defined by the request body
     :return:
@@ -32,10 +37,15 @@ def create_new_systems(server_addr: HttpUrl, request_body: dict, api_root: str =
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_request_body(request_body)
                    .build_url_from_base()
+                   .with_auth(uname, pword)
+                   .with_headers(headers)
+                   .with_request_method('POST')
                    .build())
-    resp = requests.post(api_request.url, json=api_request.body, headers=api_request.headers)
-    return resp.json()
-
+    print(api_request.url)
+    # resp = requests.post(api_request.url, data=api_request.body, headers=api_request.headers, auth=(uname, pword))
+    resp = post_request(api_request.url, api_request.body, api_request.headers, api_request.auth)
+    print(f'Create new system response: {resp}')
+    return resp
 
 
 def list_all_systems_in_collection(server_addr: HttpUrl, collection_id: str, api_root: str = APITerms.API.value):
@@ -93,8 +103,8 @@ def retrieve_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = 
     return resp.json()
 
 
-def update_system_description(server_addr: HttpUrl, system_id: str, request_body: dict,
-                              api_root: str = APITerms.API.value):
+def update_system_description(server_addr: HttpUrl, system_id: str, request_body: str,
+                              api_root: str = APITerms.API.value, headers: dict = None):
     """
     Updates a system's description by its id
     :return:
@@ -106,9 +116,10 @@ def update_system_description(server_addr: HttpUrl, system_id: str, request_body
                    .with_resource_id(system_id)
                    .with_request_body(request_body)
                    .build_url_from_base()
+                   .with_headers(headers)
                    .build())
-    resp = requests.put(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+    resp = requests.put(api_request.url, data=request_body, headers=api_request.headers)
+    return resp
 
 
 def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
@@ -124,7 +135,7 @@ def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = AP
                    .build_url_from_base()
                    .build())
     resp = requests.delete(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+    return resp
 
 
 def list_system_components(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
