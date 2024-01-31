@@ -32,7 +32,7 @@ def test_add_systems():
     arg_keys = ['type', 'id', 'description', 'properties']
     property_keys = ['featureType', 'name', 'uid', 'description']
 
-    sml_temp = SmlJSONBody(system_type='SimpleProcess', id=str(random.randint(1000, 9999)),
+    sml_temp = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
                            description="A Test System inserted from the Python Connected Systems API Client",
                            unique_id=f'urn:test:client:sml-single', label=f'Test System - SML Single',
                            definition="http://test.com")
@@ -56,7 +56,7 @@ def test_add_systems():
 
     batch_systems = []
     for i in range(2, 6):
-        temp = SmlJSONBody(system_type='SimpleProcess', id=str(random.randint(1000, 9999)),
+        temp = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
                            description="Batch inserted system from a test of the Python API Client",
                            unique_id=f'urn:test:client:{i}', label=f'Test System - {i}',
                            definition="http://test.com")
@@ -99,7 +99,7 @@ def test_update_systems():
         raise ValueError("No systems to update")
     for system in retrieved_systems:
         print(system)
-        sml_temp = SmlJSONBody(system_type='SimpleProcess', id=str(random.randint(1000, 9999)),
+        sml_temp = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
                                description="Modified by an update via CSAPI4Py",
                                unique_id=system['properties']['uid'], label=system['properties']['name'],
                                definition="http://test.com")
@@ -107,13 +107,29 @@ def test_update_systems():
                                           sml_temp.model_dump_json(exclude_none=True, by_alias=True),
                                           headers=sml_json_headers)
 
+
 def test_create_procedures():
-    Procedures.create_new_procedure(server_url, procedure_json[0].model_dump_json(exclude_none=True, by_alias=True),
+    sml_procedure = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
+                                description="A Test Procedure inserted from the Python CSAPI Client",
+                                unique_id=f'urn:test:client:sml-procedure',
+                                label=f'Test Procedure - SML',
+                                definition="http://www.w3.org/ns/sosa/Procedure")
+    geo_procedure = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+                                description="Test Insertion of Procedure via GEOJSON",
+                                properties={
+                                    "featureType": "http://www.w3.org/ns/ssn/Procedure",
+                                    "name": f'Test Procedure - GeoJSON',
+                                    "uid": f'urn:test:client:geo-procedure',
+                                    "description": "A Test Procedure inserted from the Python CSAPI Client",
+                                })
 
+    resp = Procedures.create_new_procedures(server_url, geo_procedure.model_dump_json(exclude_none=True, by_alias=True),
+                                            headers=geo_json_headers)
+    print(resp)
 
-"""
-Teardown Section
-"""
+    """
+    Teardown Section
+    """
 
 # def test_delete_all_systems():
 #     sys_list = Systems.list_all_systems("http://localhost:8181/sensorhub")["items"]

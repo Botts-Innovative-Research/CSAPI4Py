@@ -19,6 +19,7 @@ def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value, h
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .build_url_from_base()
+                   .with_headers(headers)
                    .build())
     resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
     return resp.json()

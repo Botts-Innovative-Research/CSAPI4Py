@@ -15,7 +15,7 @@ class GeoJSONBody(BaseModel):
 
 
 class SmlJSONBody(BaseModel):
-    system_type: str = Field(None, serialization_alias='type')
+    object_type: str = Field(None, serialization_alias='type')
     id: str = Field(None)
     description: str = Field(None)
     unique_id: str = Field(..., serialization_alias='uniqueId')
