@@ -22,7 +22,7 @@ the API solely
 # TODO: Validate places where string fields are not allowed to be empty
 
 
-class AnyComponent(BaseModel):
+class AnyComponentSchema(BaseModel):
     id: str = Field(None)
     label: str = Field(None)
     description: str = Field(None)
@@ -32,48 +32,48 @@ class AnyComponent(BaseModel):
     definition: str = Field(None)
 
 
-class DataRecord(AnyComponent):
+class DataRecordSchema(AnyComponentSchema):
     type: str = "DataRecord"
-    fields: list[AnyComponent] = Field(...)
+    fields: list[AnyComponentSchema] = Field(...)
 
 
-class Vector(AnyComponent):
+class VectorSchema(AnyComponentSchema):
     label: str = "Vector"
     type: str = Field(...)
     definition: str = Field(...)
     reference_frame: str = Field(...)
     local_frame: str = Field(None)
     # TODO: VERIFY might need to be moved further down when these are defined
-    coordinates: Union[list[Count], list[Quantity], list[Time]] = Field(...)
+    coordinates: Union[list[CountSchema], list[QuantitySchema], list[TimeSchema]] = Field(...)
 
 
-class DataArray(AnyComponent):
+class DataArraySchema(AnyComponentSchema):
     type: str = "DataArray"
     element_count: int = Field(..., serialization_alias='elementCount')  # Should type of Count
-    element_type: list[AnyComponent] = Field(..., serialization_alias='elementType')
+    element_type: list[AnyComponentSchema] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
 
 
-class Matrix(AnyComponent):
+class MatrixSchema(AnyComponentSchema):
     type: str = "Matrix"
     element_count: int = Field(..., serialization_alias='elementCount')  # Should be type of Count
-    element_type: list[AnyComponent] = Field(..., serialization_alias='elementType')
+    element_type: list[AnyComponentSchema] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
     reference_frame: str = Field(None)
     local_frame: str = Field(None)
 
 
-class DataChoice(AnyComponent):
+class DataChoiceSchema(AnyComponentSchema):
     type: str = "DataChoice"
     updatable: bool = Field(False)
     optional: bool = Field(False)
-    choice_value: Category = Field(..., serialization_alias='choiceValue')  # TODO: Might be called "choiceValues"
-    items: list[AnyComponent] = Field(...)
+    choice_value: CategorySchema = Field(..., serialization_alias='choiceValue')  # TODO: Might be called "choiceValues"
+    items: list[AnyComponentSchema] = Field(...)
 
 
-class Geometry(AnyComponent):
+class GeometrySchema(AnyComponentSchema):
     label: str = Field(...)
     type: str = "Geometry"
     updatable: bool = Field(False)
@@ -88,7 +88,7 @@ class Geometry(AnyComponent):
     value = Field(None)
 
 
-class AnySimpleComponent(AnyComponent):
+class AnySimpleComponentSchema(AnyComponentSchema):
     label: str = Field(...)
     description = Field(None)
     type: str = Field(...)
@@ -97,31 +97,31 @@ class AnySimpleComponent(AnyComponent):
     definition: str = Field(...)
     reference_frame: str = Field(None, serialization_alias='referenceFrame')
     axis_id: str = Field(None, serialization_alias='axisID')
-    quality: Union[list[Quantity], list[QuantityRange], list[Category], list[Text]] = Field(
+    quality: Union[list[QuantitySchema], list[QuantityRangeSchema], list[CategorySchema], list[TextSchema]] = Field(
         None)  # TODO: Union[Quantity, QuantityRange, Category, Text]
     nil_values: list = Field(None, serialization_alias='nilValues')
     constraint = Field(None)
     value = Field(None)
 
 
-class AnyScalarComponent(AnySimpleComponent):
+class AnyScalarComponentSchema(AnySimpleComponentSchema):
     """
     A base class for all scalar components. The structure is essentially that of AnySimpleComponent
     """
     pass
 
 
-class Boolean(AnyScalarComponent):
+class BooleanSchema(AnyScalarComponentSchema):
     type: str = "Boolean"
     value: bool = Field(None)
 
 
-class Count(AnyScalarComponent):
+class CountSchema(AnyScalarComponentSchema):
     type: str = "Count"
     value: int = Field(None)
 
 
-class Quantity(AnyScalarComponent):
+class QuantitySchema(AnyScalarComponentSchema):
     type: str = "Quantity"
     value: Union[Real, str] = Field(None)
     uom: Union[UCUMCode, URI] = Field(...)
@@ -145,7 +145,7 @@ class Quantity(AnyScalarComponent):
                                  '[NaN, INFINITY, +INFINITY, -INFINITY]')
 
 
-class Time(AnyScalarComponent):
+class TimeSchema(AnyScalarComponentSchema):
     type: str = "Time"
     value: str = Field(None)
     reference_time: str = Field(None, serialization_alias='referenceTime')
@@ -153,30 +153,30 @@ class Time(AnyScalarComponent):
     uom: Union[UCUMCode, URI] = Field(...)
 
 
-class Category(AnyScalarComponent):
+class CategorySchema(AnyScalarComponentSchema):
     type: str = "Category"
     value: str = Field(None)
     code_space: str = Field(None, serialization_alias='codeSpace')
 
 
-class Text(AnyScalarComponent):
+class TextSchema(AnyScalarComponentSchema):
     type: str = "Text"
     value: str = Field(None)
 
 
-class CountRange(AnySimpleComponent):
+class CountRangeSchema(AnySimpleComponentSchema):
     type: str = "CountRange"
     value: list[int] = Field(None)
     uom: Union[UCUMCode, URI] = Field(...)
 
 
-class QuantityRange(AnySimpleComponent):
+class QuantityRangeSchema(AnySimpleComponentSchema):
     type: str = "QuantityRange"
     value: list[Union[Real, str]] = Field(None)
     uom: Union[UCUMCode, URI] = Field(...)
 
 
-class TimeRange(AnySimpleComponent):
+class TimeRangeSchema(AnySimpleComponentSchema):
     type: str = "TimeRange"
     value: list[str] = Field(None)
     reference_time: str = Field(None, serialization_alias='referenceTime')
@@ -184,7 +184,7 @@ class TimeRange(AnySimpleComponent):
     uom: Union[UCUMCode, URI] = Field(...)
 
 
-class CategoryRange(AnySimpleComponent):
+class CategoryRangeSchema(AnySimpleComponentSchema):
     type: str = "CategoryRange"
     value: list[str] = Field(None)
     code_space: str = Field(None, serialization_alias='codeSpace')
