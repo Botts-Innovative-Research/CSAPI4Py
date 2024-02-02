@@ -67,7 +67,6 @@ def test_add_systems():
     batch_json_str = model_utils.serialize_model_list(batch_systems)
     Systems.create_new_systems(server_url, batch_json_str, uname="admin", pword="admin",
                                headers=sml_json_headers)
-    print(system_json)
 
 
 def test_list_systems():
@@ -108,28 +107,122 @@ def test_update_systems():
                                           headers=sml_json_headers)
 
 
-def test_create_procedures():
-    sml_procedure = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
-                                description="A Test Procedure inserted from the Python CSAPI Client",
-                                unique_id=f'urn:test:client:sml-procedure',
-                                label=f'Test Procedure - SML',
-                                definition="http://www.w3.org/ns/sosa/Procedure")
-    geo_procedure = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
-                                description="Test Insertion of Procedure via GEOJSON",
-                                properties={
-                                    "featureType": "http://www.w3.org/ns/ssn/Procedure",
-                                    "name": f'Test Procedure - GeoJSON',
-                                    "uid": f'urn:test:client:geo-procedure',
-                                    "description": "A Test Procedure inserted from the Python CSAPI Client",
-                                })
+"""
+Procedure Tests
+"""
+# def test_create_procedures():
+#     sml_procedure = SmlJSONBody(object_type='SimpleProcess', id=str(random.randint(1000, 9999)),
+#                                 description="A Test Procedure inserted from the Python CSAPI Client",
+#                                 unique_id=f'urn:test:client:sml-procedure',
+#                                 label=f'Test Procedure - SML',
+#                                 definition="http://www.w3.org/ns/sosa/Procedure")
+#     geo_procedure = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+#                                 description="Test Insertion of Procedure via GEOJSON",
+#                                 properties={
+#                                     "featureType": "http://www.w3.org/ns/ssn/Procedure",
+#                                     "name": f'Test Procedure - GeoJSON',
+#                                     "uid": f'urn:test:client:geo-procedure',
+#                                     "description": "A Test Procedure inserted from the Python CSAPI Client",
+#                                 })
+#
+#     resp = Procedures.create_new_procedures(server_url, geo_procedure.model_dump_json(exclude_none=True, by_alias=True),
+#                                             headers=geo_json_headers)
+#     print(resp)
 
-    resp = Procedures.create_new_procedures(server_url, geo_procedure.model_dump_json(exclude_none=True, by_alias=True),
-                                            headers=geo_json_headers)
+"""
+Sampling Feature Tests
+"""
+sf_id = None
+
+
+def test_create_sampling_feature():
+    geo_sf = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+                         description="Test Insertion of Sampling Feature via GEOJSON",
+                         properties={
+                             "featureType": "http://www.w3.org/ns/ssn/SamplingFeature",
+                             "name": f'Test Sampling Feature - GeoJSON',
+                             "uid": f'urn:test:client:geo-sf',
+                             "description": "A Test Sampling Feature inserted from the Python CSAPI Client",
+                         })
+
+    resp = SamplingFeatures.create_new_sampling_features(server_url, retrieved_systems[0]['id'],
+                                                         geo_sf.model_dump_json(exclude_none=True, by_alias=True),
+                                                         headers=geo_json_headers)
+
+    geo_sf = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+                         description="Test Insertion of Sampling Feature via GEOJSON",
+                         properties={
+                             "featureType": "http://www.w3.org/ns/ssn/SamplingFeature",
+                             "name": f'Test Sampling Feature - GeoJSON',
+                             "uid": f'urn:test:client:geo-sf2',
+                             "description": "A Test Sampling Feature inserted from the Python CSAPI Client",
+                         })
+
+    resp = SamplingFeatures.create_new_sampling_features(server_url, retrieved_systems[1]['id'],
+                                                         geo_sf.model_dump_json(exclude_none=True, by_alias=True),
+                                                         headers=geo_json_headers)
     print(resp)
 
-    """
-    Teardown Section
-    """
+
+def test_list_sampling_features():
+    sf_list = SamplingFeatures.list_all_sampling_features(server_url)
+    print(sf_list.json())
+
+
+def test_list_sampling_feature_by_system():
+    sf_list = SamplingFeatures.list_sampling_features_of_system(server_url, retrieved_systems[0]['id'])
+    print(sf_list.json())
+    sf_id = sf_list.json()['items'][0]['id']
+
+
+def test_update_sampling_feature():
+    sf_list = SamplingFeatures.list_sampling_features_of_system(server_url, retrieved_systems[0]['id'])
+    print(sf_list.json())
+    sf_id = sf_list.json()['items'][0]['id']
+    geo_sf = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+                         description="Test Insertion of Sampling Feature via GEOJSON",
+                         properties={
+                             "featureType": "http://www.w3.org/ns/ssn/SamplingFeature",
+                             "name": f'Test Sampling Feature - GeoJSON (Updated)',
+                             "uid": f'urn:test:client:geo-sf',
+                             "description": "A Test Sampling Feature updated from the Python CSAPI Client",
+                         })
+
+    resp = SamplingFeatures.update_sampling_feature_by_id(server_url,
+                                                          sf_id,
+                                                          geo_sf.model_dump_json(exclude_none=True,
+                                                                                 by_alias=True),
+                                                          headers=geo_json_headers)
+    print(resp)
+
+
+def test_retrieve_sampling_feature_by_id():
+    sf = SamplingFeatures.retrieve_sampling_feature_by_id(server_url, sf_id)
+    print(f'Retrieved by ID: {sf.json()}')
+
+
+"""
+Datastream Section
+"""
+def test_create_datastreams():
+    datastream = {
+        "type": "Feature",
+        "id": "urn:ogc:object:feature:Sensor:1",
+        "description": "Test Insertion of Datastream via GEOJSON",
+        "properties": {
+            "featureType": "http://www.w3.org/ns/sosa/Datastream",
+            "name": "Test Datastream - GeoJSON",
+            "uid": "urn:test:client:geo-ds",
+            "description": "A Test Datastream inserted from the Python CSAPI Client",
+        }
+    }
+    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'], datastream, headers=geo_json_headers)
+    print(resp)
+
+
+"""
+Teardown Section
+"""
 
 # def test_delete_all_systems():
 #     sys_list = Systems.list_all_systems("http://localhost:8181/sensorhub")["items"]

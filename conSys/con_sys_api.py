@@ -20,6 +20,7 @@ class ConnectedSystemAPIRequest(BaseModel):
             case 'POST':
                 return post_request(self.url, self.body, self.headers, self.auth)
             case 'PUT':
+                print(f'PUT request: {self}')
                 return put_request(self.url, self.body, self.headers, self.auth)
             case 'DELETE':
                 return delete_request(self.url, self.params, self.headers, self.auth)
