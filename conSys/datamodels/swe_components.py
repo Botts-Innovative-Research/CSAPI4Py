@@ -8,6 +8,19 @@ from pydantic import BaseModel, Field, field_validator
 from conSys import GeometryTypes
 from conSys.datamodels.api_utils import UCUMCode, URI
 
+"""
+ NOTE: The following classes are used to represent the Record Schemas that are required for use with Datastreams
+The names are likely to change to include a "Schema" suffix to differentiate them from the actual data structures.
+The current scope of the project likely excludes conversion from received data to actual SWE Common data structures, 
+in the event this is added it will most likely be in a separate module as those structures have use cases outside of
+the API solely
+"""
+
+
+# TODO: Add field validators that are missing
+# TODO: valid string fields that are intended to represent time/date values
+# TODO: Validate places where string fields are not allowed to be empty
+
 
 class AnyComponent(BaseModel):
     id: str = Field(None)
@@ -75,7 +88,7 @@ class Geometry(AnyComponent):
     value = Field(None)
 
 
-class AnyScalarComponent(AnyComponent):
+class AnySimpleComponent(AnyComponent):
     label: str = Field(...)
     description = Field(None)
     type: str = Field(...)
@@ -89,6 +102,13 @@ class AnyScalarComponent(AnyComponent):
     nil_values: list = Field(None, serialization_alias='nilValues')
     constraint = Field(None)
     value = Field(None)
+
+
+class AnyScalarComponent(AnySimpleComponent):
+    """
+    A base class for all scalar components. The structure is essentially that of AnySimpleComponent
+    """
+    pass
 
 
 class Boolean(AnyScalarComponent):
@@ -142,3 +162,29 @@ class Category(AnyScalarComponent):
 class Text(AnyScalarComponent):
     type: str = "Text"
     value: str = Field(None)
+
+
+class CountRange(AnySimpleComponent):
+    type: str = "CountRange"
+    value: list[int] = Field(None)
+    uom: Union[UCUMCode, URI] = Field(...)
+
+
+class QuantityRange(AnySimpleComponent):
+    type: str = "QuantityRange"
+    value: list[Union[Real, str]] = Field(None)
+    uom: Union[UCUMCode, URI] = Field(...)
+
+
+class TimeRange(AnySimpleComponent):
+    type: str = "TimeRange"
+    value: list[str] = Field(None)
+    reference_time: str = Field(None, serialization_alias='referenceTime')
+    local_frame: str = Field(None)
+    uom: Union[UCUMCode, URI] = Field(...)
+
+
+class CategoryRange(AnySimpleComponent):
+    type: str = "CategoryRange"
+    value: list[str] = Field(None)
+    code_space: str = Field(None, serialization_alias='codeSpace')
