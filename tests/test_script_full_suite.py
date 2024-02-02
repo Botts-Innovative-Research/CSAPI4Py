@@ -1,10 +1,8 @@
 import json
 import random
 
-from conSys import Systems, Procedures, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils
-
-# from conSys.request_bodies import GeoJSONBody, SmlJSONBody
-# from conSys.part_1.systems import create_new_systems, list_all_systems, delete_system_by_id
+from conSys import Systems, Procedures, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
+    DatastreamBodyJSON
 
 server_url = "http://localhost:8181/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
@@ -204,19 +202,12 @@ def test_retrieve_sampling_feature_by_id():
 """
 Datastream Section
 """
+
+
 def test_create_datastreams():
-    datastream = {
-        "type": "Feature",
-        "id": "urn:ogc:object:feature:Sensor:1",
-        "description": "Test Insertion of Datastream via GEOJSON",
-        "properties": {
-            "featureType": "http://www.w3.org/ns/sosa/Datastream",
-            "name": "Test Datastream - GeoJSON",
-            "uid": "urn:test:client:geo-ds",
-            "description": "A Test Datastream inserted from the Python CSAPI Client",
-        }
-    }
-    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'], datastream, headers=geo_json_headers)
+    datastream = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1",)
+    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'], datastream.model_dump_json(exclude_none=True, by_alias=True),
+                                                 headers=json_headers)
     print(resp)
 
 

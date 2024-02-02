@@ -3,6 +3,7 @@ from typing import Union
 from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel
 
 from conSys.sensor_ml.sml import TypeOf
+from conSys.constants import DatastreamResultTypes
 
 
 class GeoJSONBody(BaseModel):
@@ -53,6 +54,26 @@ class OMJSONBody(BaseModel):
     parameters: list = Field(None)
     result: dict = Field(None)
     result_links: list = Field(None, alias="result@links")
+
+
+class DatastreamBodyJSON(BaseModel):
+    """
+    NOTES: though the spec does not require that outputName, and schema be present, they are required for the
+    implementation of the API present on OSH
+    """
+    id: str = Field(None)
+    name: str = Field(...)
+    description: str = Field(None)
+    deployment: HttpUrl = Field(None, serialization_alias='deployment@link')
+    ultimate_feature_of_interest: HttpUrl = Field(None, serialization_alias='ultimateFeatureOfInterest@link')
+    sampling_feature: HttpUrl = Field(None, serialization_alias='samplingFeature@link')
+    valid_time: list = Field(None, serialization_alias='validTime')
+    output_name: str = Field(..., serialization_alias='outputName')
+    phenomenon_time_interval: str = Field(None, serialization_alias='phenomenonTimeInterval')
+    result_time_interval: str = Field(None, serialization_alias='resultTimeInterval')
+    result_type: DatastreamResultTypes = Field(None, serialization_alias='resultType')
+    links: list = Field(None)
+    schema: dict = Field(None)  # TODO: introduce a DatastreamSchema class
 
 
 class RequestBody(BaseModel):

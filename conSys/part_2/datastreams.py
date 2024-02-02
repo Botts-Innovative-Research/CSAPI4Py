@@ -54,7 +54,7 @@ def add_datastreams_to_system(server_addr: HttpUrl, system_id: str, request_body
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
-                   .for_resource_type(APITerms.DATASTREAMS.value)
+                   .for_sub_resource_type(APITerms.DATASTREAMS.value)
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .with_headers(headers)

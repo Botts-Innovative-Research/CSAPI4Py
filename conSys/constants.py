@@ -46,3 +46,28 @@ class ObservationFormat(Enum):
     SWE_JSON = "application/swe+json"
     SWE_CSV = "application/swe+csv"
     SWE_BINARY = "application/swe+binary"
+    SWE_TEXT = "application/swe+text"
+
+
+class DatastreamResultTypes(Enum):
+    """
+    Defines the datastream result types
+    """
+    MEASURE = "measure"
+    VECTOR = "vector"
+    RECORD = "record"
+    COVERAGE_1D = "coverage1D"
+    COVERAGE_2D = "coverage2D"
+    COVERAGE_3D = "coverage3D"
+
+
+class GeometryTypes(Enum):
+    """
+    Defines the geometry types
+    """
+    POINT = "Point"
+    LINESTRING = "LineString"
+    POLYGON = "Polygon"
+    MULTI_POINT = "MultiPoint"
+    MULTI_LINESTRING = "MultiLineString"
+    MULTI_POLYGON = "MultiPolygon"

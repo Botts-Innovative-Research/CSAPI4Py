@@ -18,6 +18,7 @@ class ConnectedSystemAPIRequest(BaseModel):
             case 'GET':
                 return get_request(self.url, self.params, self.headers, self.auth)
             case 'POST':
+                print(f'POST request: {self}')
                 return post_request(self.url, self.body, self.headers, self.auth)
             case 'PUT':
                 print(f'PUT request: {self}')

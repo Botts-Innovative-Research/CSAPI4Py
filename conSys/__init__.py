@@ -15,8 +15,8 @@ from .part_2 import system_history as SystemHistory
 
 from .endpoints.endpoints import Endpoint
 
-from .request_bodies import RequestBody, SmlJSONBody, GeoJSONBody
+from .request_bodies import *
 
 from .querymodel import QueryModel
-from .constants import APITerms, SystemTypes, ObservationFormat
+from .constants import *
 from .utilities import model_utils
