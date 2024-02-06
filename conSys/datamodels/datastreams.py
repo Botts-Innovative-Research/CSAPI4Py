@@ -1,6 +1,8 @@
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, SerializeAsAny
 
 from conSys import ObservationFormat
+from conSys.datamodels.encoding import Encoding
+from conSys.datamodels.swe_components import AnyComponentSchema
 
 
 class DatastreamSchema(BaseModel):
@@ -11,13 +13,13 @@ class DatastreamSchema(BaseModel):
 
 
 class SWEDatastreamSchema(DatastreamSchema):
-    encoding: dict = Field(...)
-    record_schema: dict = Field(..., record_schema='recordSchema')
+    encoding: SerializeAsAny[Encoding] = Field(...)
+    record_schema: SerializeAsAny[AnyComponentSchema] = Field(..., serialization_alias='recordSchema')
 
-    @field_validator('obsFormat')
+    @field_validator('obs_format')
     @classmethod
     def check_check_obs_format(cls, v):
-        if v in [ObservationFormat.SWE_JSON.value, ObservationFormat.SWE_CSV.value,
-                 ObservationFormat.SWE_TEXT.value, ObservationFormat.SWE_BINARY.value]:
+        if v not in [ObservationFormat.SWE_JSON.value, ObservationFormat.SWE_CSV.value,
+                     ObservationFormat.SWE_TEXT.value, ObservationFormat.SWE_BINARY.value]:
             raise ValueError('obsFormat must be on of the SWE formats')
         return v

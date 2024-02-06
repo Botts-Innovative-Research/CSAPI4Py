@@ -1,10 +1,14 @@
 from typing import Union
 
-from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel
+from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel, SerializeAsAny
 
+from conSys.datamodels.datastreams import DatastreamSchema
 from conSys.sensor_ml.sml import TypeOf
 from conSys.constants import DatastreamResultTypes
 
+
+# TODO: Consider some sort of Abstract Base Class for all valid request bodies to inherit from to reduce the complexity
+#  of the final request body.
 
 class GeoJSONBody(BaseModel):
     type: str
@@ -73,14 +77,15 @@ class DatastreamBodyJSON(BaseModel):
     result_time_interval: str = Field(None, serialization_alias='resultTimeInterval')
     result_type: DatastreamResultTypes = Field(None, serialization_alias='resultType')
     links: list = Field(None)
-    schema: dict = Field(None)  # TODO: introduce a DatastreamSchema class
+    schema: SerializeAsAny[DatastreamSchema] = Field(...)
 
 
 class RequestBody(BaseModel):
     """
     Wrapper class to support different request json structures
     """
-    json_structure: Union[GeoJSONBody, SmlJSONBody, OMJSONBody] = Field(..., serialization_alias='json')
+    json_structure: Union[GeoJSONBody, SmlJSONBody, OMJSONBody, DatastreamSchema] = Field(...,
+                                                                                          serialization_alias='json')
     test_extra: str = Field("Hello, I am test", serialization_alias='testExtra')
 
     @model_serializer
@@ -90,4 +95,4 @@ class RequestBody(BaseModel):
 
 
 class RequestBodyList(RootModel):
-    root: list[Union[GeoJSONBody, SmlJSONBody, OMJSONBody]] = Field(...)
+    root: list[Union[GeoJSONBody, SmlJSONBody, OMJSONBody, DatastreamSchema]] = Field(...)

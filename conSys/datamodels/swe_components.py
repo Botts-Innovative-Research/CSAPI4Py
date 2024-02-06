@@ -1,12 +1,13 @@
 from __future__ import annotations
 
 from numbers import Real
-from typing import Union
+from typing import Union, Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, SerializeAsAny
 
 from conSys import GeometryTypes
 from conSys.datamodels.api_utils import UCUMCode, URI
+from conSys.datamodels.geometry import Geometry
 
 """
  NOTE: The following classes are used to represent the Record Schemas that are required for use with Datastreams
@@ -23,10 +24,10 @@ the API solely
 
 
 class AnyComponentSchema(BaseModel):
+    type: str = Field(...)
     id: str = Field(None)
     label: str = Field(None)
     description: str = Field(None)
-    type: str = Field(...)
     updatable: bool = Field(False)
     optional: bool = Field(False)
     definition: str = Field(None)
@@ -34,7 +35,7 @@ class AnyComponentSchema(BaseModel):
 
 class DataRecordSchema(AnyComponentSchema):
     type: str = "DataRecord"
-    fields: list[AnyComponentSchema] = Field(...)
+    fields: SerializeAsAny[list[AnyComponentSchema]] = Field(...)
 
 
 class VectorSchema(AnyComponentSchema):
@@ -44,13 +45,13 @@ class VectorSchema(AnyComponentSchema):
     reference_frame: str = Field(...)
     local_frame: str = Field(None)
     # TODO: VERIFY might need to be moved further down when these are defined
-    coordinates: Union[list[CountSchema], list[QuantitySchema], list[TimeSchema]] = Field(...)
+    coordinates: SerializeAsAny[Union[list[CountSchema], list[QuantitySchema], list[TimeSchema]]] = Field(...)
 
 
 class DataArraySchema(AnyComponentSchema):
     type: str = "DataArray"
     element_count: int = Field(..., serialization_alias='elementCount')  # Should type of Count
-    element_type: list[AnyComponentSchema] = Field(..., serialization_alias='elementType')
+    element_type: SerializeAsAny[list[AnyComponentSchema]] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
 
@@ -58,7 +59,7 @@ class DataArraySchema(AnyComponentSchema):
 class MatrixSchema(AnyComponentSchema):
     type: str = "Matrix"
     element_count: int = Field(..., serialization_alias='elementCount')  # Should be type of Count
-    element_type: list[AnyComponentSchema] = Field(..., serialization_alias='elementType')
+    element_type: SerializeAsAny[list[AnyComponentSchema]] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
     reference_frame: str = Field(None)
@@ -70,7 +71,7 @@ class DataChoiceSchema(AnyComponentSchema):
     updatable: bool = Field(False)
     optional: bool = Field(False)
     choice_value: CategorySchema = Field(..., serialization_alias='choiceValue')  # TODO: Might be called "choiceValues"
-    items: list[AnyComponentSchema] = Field(...)
+    items: SerializeAsAny[list[AnyComponentSchema]] = Field(...)
 
 
 class GeometrySchema(AnyComponentSchema):
@@ -85,23 +86,23 @@ class GeometrySchema(AnyComponentSchema):
                       GeometryTypes.MULTI_POLYGON.value]}
     nil_values: list = Field(None, serialization_alias='nilValues')
     srs: str = Field(...)
-    value = Field(None)
+    value: Geometry = Field(None)
 
 
 class AnySimpleComponentSchema(AnyComponentSchema):
     label: str = Field(...)
-    description = Field(None)
+    description: str = Field(None)
     type: str = Field(...)
-    updatable = Field(False)
-    optional = Field(False)
+    updatable: bool = Field(False)
+    optional: bool = Field(False)
     definition: str = Field(...)
     reference_frame: str = Field(None, serialization_alias='referenceFrame')
     axis_id: str = Field(None, serialization_alias='axisID')
     quality: Union[list[QuantitySchema], list[QuantityRangeSchema], list[CategorySchema], list[TextSchema]] = Field(
         None)  # TODO: Union[Quantity, QuantityRange, Category, Text]
     nil_values: list = Field(None, serialization_alias='nilValues')
-    constraint = Field(None)
-    value = Field(None)
+    constraint: Any = Field(None)
+    value: Any = Field(None)
 
 
 class AnyScalarComponentSchema(AnySimpleComponentSchema):
@@ -123,7 +124,7 @@ class CountSchema(AnyScalarComponentSchema):
 
 class QuantitySchema(AnyScalarComponentSchema):
     type: str = "Quantity"
-    value: Union[Real, str] = Field(None)
+    value: Union[float, str] = Field(None)
     uom: Union[UCUMCode, URI] = Field(...)
 
     @field_validator('value')
@@ -172,7 +173,7 @@ class CountRangeSchema(AnySimpleComponentSchema):
 
 class QuantityRangeSchema(AnySimpleComponentSchema):
     type: str = "QuantityRange"
-    value: list[Union[Real, str]] = Field(None)
+    value: list[Union[float, str]] = Field(None)
     uom: Union[UCUMCode, URI] = Field(...)
 
 

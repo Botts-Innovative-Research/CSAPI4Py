@@ -1,10 +1,12 @@
-import json
 import random
 
-from conSys import Systems, Procedures, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
-    DatastreamBodyJSON
+from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
+    DatastreamBodyJSON, ObservationFormat, URI
+from conSys.datamodels.datastreams import SWEDatastreamSchema
+from conSys.datamodels.encoding import JSONEncoding
+from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema
 
-server_url = "http://localhost:8181/sensorhub"
+server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
 sml_json_headers = {"Content-Type": "application/sml+json"}
 json_headers = {"Content-Type": "application/json"}
@@ -205,8 +207,20 @@ Datastream Section
 
 
 def test_create_datastreams():
-    datastream = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1",)
-    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'], datastream.model_dump_json(exclude_none=True, by_alias=True),
+    time_schema = TimeSchema(label="Test Datastream Time", definition="http://test.com/Time",
+                             uom=URI(href="http://test.com/TimeUOM"))
+    bool_schema = BooleanSchema(label="Test Datastream Boolean", definition="http://test.com/Boolean")
+    datarecord_schema = SWEDatastreamSchema(encoding=JSONEncoding(), obs_format=ObservationFormat.SWE_JSON.value,
+                                            record_schema=DataRecordSchema(label="Test Datastream Record",
+                                                                           definition="http://test.com/Record",
+                                                                           fields=[time_schema, bool_schema]))
+
+    print(f'Datastream Schema: {datarecord_schema.model_dump_json(exclude_none=True, by_alias=True)}')
+    datastream_body = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1", schema=datarecord_schema)
+    temp_test_json = datastream_body.model_dump_json(exclude_none=True, by_alias=True)
+    print(f'Test Datastream JSON: {temp_test_json}')
+    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'],
+                                                 datastream_body.model_dump_json(exclude_none=True, by_alias=True),
                                                  headers=json_headers)
     print(resp)
 
