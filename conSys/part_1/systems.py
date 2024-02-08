@@ -123,7 +123,7 @@ def update_system_description(server_addr: HttpUrl, system_id: str, request_body
     return resp
 
 
-def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):
+def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value, headers: dict = None):
     """
     Deletes a system by its id
     :return:
@@ -134,9 +134,10 @@ def delete_system_by_id(server_addr: HttpUrl, system_id: str, api_root: str = AP
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('DELETE')
                    .build())
-    resp = requests.delete(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp
+    return api_request.make_request()
 
 
 def list_system_components(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value):

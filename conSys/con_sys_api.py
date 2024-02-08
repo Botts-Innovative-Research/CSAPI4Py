@@ -24,6 +24,7 @@ class ConnectedSystemAPIRequest(BaseModel):
                 print(f'PUT request: {self}')
                 return put_request(self.url, self.body, self.headers, self.auth)
             case 'DELETE':
+                print(f'DELETE request: {self}')
                 return delete_request(self.url, self.params, self.headers, self.auth)
             case _:
                 raise ValueError('Invalid request method')

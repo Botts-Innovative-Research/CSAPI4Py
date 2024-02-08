@@ -1,7 +1,7 @@
 import random
 
 from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
-    DatastreamBodyJSON, ObservationFormat, URI
+    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments
 from conSys.datamodels.datastreams import SWEDatastreamSchema
 from conSys.datamodels.encoding import JSONEncoding
 from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema
@@ -105,6 +105,63 @@ def test_update_systems():
         Systems.update_system_description(server_url, system['id'],
                                           sml_temp.model_dump_json(exclude_none=True, by_alias=True),
                                           headers=sml_json_headers)
+
+
+"""
+Deployments Section
+"""
+
+
+def test_create_deployments():
+    deployment = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)), properties={
+        "featureType": "http://www.w3.org/ns/ssn/Deployment",
+        "uid": "urn:test:client:geo-deployment",
+        "name": "Test Deployment - GeoJSON",
+        "description": "A Test Deployment inserted from the Python CSAPI Client",
+        "validTime": ["2024-01-01T00:00:00Z", "2024-12-31T23:59:59Z"]
+    }, geometry=Geometry(type="Point", coordinates=[-80.0, 35.0]))
+    resp = Deployments.create_new_deployments(server_url, deployment.model_dump_json(exclude_none=True, by_alias=True),
+                                              headers=geo_json_headers)
+    print(resp)
+
+
+def test_list_all_deployments():
+    deployments = Deployments.list_all_deployments(server_url)
+    print(deployments.json())
+
+
+def test_retrieve_deployment_by_id():
+    deployments = Deployments.list_all_deployments(server_url)
+
+    deployment = Deployments.retrieve_deployment_by_id(server_url, deployments.json()['items'][0]['id'])
+    print(deployment.json())
+    assert deployment.json()['id'] == deployments.json()['items'][0]['id']
+
+
+def test_update_deployment_by_id():
+    deployments = Deployments.list_all_deployments(server_url)
+
+    deployment = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)), properties={
+        "featureType": "http://www.w3.org/ns/ssn/Deployment",
+        "uid": "urn:test:client:geo-deployment",
+        "name": "Test Deployment - GeoJSON (Updated)",
+        "description": "A Test Deployment updated from the Python CSAPI Client",
+        "validTime": ["2024-01-01T00:00:00Z", "2024-12-31T23:59:59Z"]
+    }, geometry=Geometry(type="Point", coordinates=[-80.0, 35.0]))
+    resp = Deployments.update_deployment_by_id(server_url, deployments.json()['items'][0]['id'],
+                                               deployment.model_dump_json(exclude_none=True, by_alias=True),
+                                               headers=geo_json_headers)
+    print(resp)
+
+
+def test_add_systems_to_deployment():
+    deployments = Deployments.list_all_deployments(server_url)
+    systems = Systems.list_all_systems(server_url, headers=json_headers)
+    system_link = {'href': f"{server_url}/api/systems/{systems['items'][0]['id']}"}
+    # uri_list = str(system_links).replace("'", "\"")
+    resp = Deployments.add_systems_to_deployment(server_url, deployments.json()['items'][0]['id'], str(system_link),
+                                                 headers=geo_json_headers)
+    print(resp)
 
 
 """
@@ -224,17 +281,69 @@ def test_create_datastreams():
                                                  headers=json_headers)
     print(resp)
 
+"""
+Command and Control Channel Section
+"""
+def test_create_control_channel():
+    geo_json_body = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
+                                description="Test Insertion of Control Channel via GEOJSON",
+                                properties={
+                                    "featureType": "http://www.w3.org/ns/ssn/ControlChannel",
+                                    "name": f'Test Control Channel - GeoJSON',
+                                    "uid": f'urn:test:client:geo-cc',
+                                    "description": "A Test Control Channel inserted from the Python CSAPI Client",
+                                })
+    resp = ControlChannels.create_new_control_channels(server_url, geo_json_body.model_dump_json(exclude_none=True, by_alias=True),
+                                                         headers=geo_json_headers)
+
 
 """
 Teardown Section
 """
 
+# def test_delete_all_collections():
+#     pass
+#
+#
+# def test_delete_all_sampling_features():
+#     sf_list = SamplingFeatures.list_all_sampling_features(server_url).json()
+#     print(sf_list)
+#
+#     for sf in sf_list["items"]:
+#         print(sf)
+#
+#         SamplingFeatures.delete_sampling_feature_by_id(server_url, sf["id"])
+#         print(f"Deleted sampling feature {sf['id']}")
+#
+#
+# def test_delete_all_datastreams():
+#     ds_list = Datastreams.list_all_datastreams(server_url).json()
+#     print(ds_list)
+#
+#     for ds in ds_list["items"]:
+#         print(ds)
+#
+#         Datastreams.delete_datastream_by_id(server_url, ds["id"])
+#         print(f"Deleted datastream {ds['id']}")
+#
+#
+# def test_delete_all_procedures():
+#     proc_list = Procedures.list_all_procedures(server_url).json()
+#     print(proc_list)
+#
+#     for proc in proc_list["items"]:
+#         print(proc)
+#
+#         Procedures.delete_procedure_by_id(server_url, proc["id"])
+#         print(f"Deleted procedure {proc['id']}")
+#
+#
 # def test_delete_all_systems():
-#     sys_list = Systems.list_all_systems("http://localhost:8181/sensorhub")["items"]
+#     sys_list = Systems.list_all_systems(server_url)["items"]
 #     print(sys_list)
 #
 #     for system in sys_list:
 #         print(system)
 #
-#         Systems.delete_system_by_id("http://localhost:8181/sensorhub", system["id"])
+#         Systems.delete_system_by_id(server_url, system["id"])
 #         print(f"Deleted system {system['id']}")

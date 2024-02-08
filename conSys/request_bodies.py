@@ -2,6 +2,7 @@ from typing import Union
 
 from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel, SerializeAsAny
 
+from conSys import Geometry
 from conSys.datamodels.datastreams import DatastreamSchema
 from conSys.sensor_ml.sml import TypeOf
 from conSys.constants import DatastreamResultTypes
@@ -14,7 +15,7 @@ class GeoJSONBody(BaseModel):
     type: str
     id: str
     properties: dict = None
-    geometry: dict = None
+    geometry: Geometry = None
     bbox: list = None
     links: list = None
 
