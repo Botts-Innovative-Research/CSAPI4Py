@@ -1,10 +1,11 @@
 import random
 
 from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
-    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments
+    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels
+from conSys.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
 from conSys.datamodels.datastreams import SWEDatastreamSchema
 from conSys.datamodels.encoding import JSONEncoding
-from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema
+from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
@@ -281,20 +282,37 @@ def test_create_datastreams():
                                                  headers=json_headers)
     print(resp)
 
+
 """
 Command and Control Channel Section
 """
+
+
 def test_create_control_channel():
-    geo_json_body = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
-                                description="Test Insertion of Control Channel via GEOJSON",
-                                properties={
-                                    "featureType": "http://www.w3.org/ns/ssn/ControlChannel",
-                                    "name": f'Test Control Channel - GeoJSON',
-                                    "uid": f'urn:test:client:geo-cc',
-                                    "description": "A Test Control Channel inserted from the Python CSAPI Client",
-                                })
-    resp = ControlChannels.create_new_control_channels(server_url, geo_json_body.model_dump_json(exclude_none=True, by_alias=True),
-                                                         headers=geo_json_headers)
+    systems_list = Systems.list_all_systems(server_url)
+    system_id = systems_list["items"][0]["id"]
+
+    time_schema = TimeSchema(label="Test Control Channel Time", definition="http://test.com/Time",
+                             uom=URI(href="http://test.com/TimeUOM"))
+    count_schema = CountSchema(label="Test Control Channel Count", definition="http://test.com/Count")
+
+    control_schema = JSONControlChannelSchema(command_format=ObservationFormat.SWE_JSON.value,
+                                              params_schema=DataRecordSchema(label="Test Control Channel Record",
+                                                                             definition="http://test.com/Record",
+                                                                             fields=[time_schema, count_schema]))
+    request_body = ControlStreamJSONSchema(name="Test Control Channel", input_name="TestControlInput1",
+                                           schema=control_schema)
+    print(f'Request Body for Control Stream: {request_body.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = ControlChannels.add_control_streams_to_system(server_url, system_id,
+                                                         request_body.model_dump_json(exclude_none=True,
+                                                                                      by_alias=True),
+                                                         headers=json_headers)
+    print(resp)
+
+
+def test_list_control_streams():
+    control_streams = ControlChannels.list_all_control_streams(server_url)
+    print(control_streams)
 
 
 """
