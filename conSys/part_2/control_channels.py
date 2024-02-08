@@ -34,7 +34,7 @@ def list_control_streams_of_system(server_addr: HttpUrl, system_id: str, api_roo
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
-                   .for_resource_type(APITerms.CONTROL_STREAMS.value)
+                   .for_sub_resource_type(APITerms.CONTROL_STREAMS.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
@@ -83,7 +83,7 @@ def retrieve_control_stream_description_by_id(server_addr: HttpUrl, control_stre
 
 def update_control_stream_description_by_id(server_addr: HttpUrl, control_stream_id: str,
                                             request_body: Union[str, dict],
-                                            api_root: str = APITerms.API.value):
+                                            api_root: str = APITerms.API.value, headers: dict = None):
     """
     Updates a control stream by its id
     :return:
@@ -95,9 +95,10 @@ def update_control_stream_description_by_id(server_addr: HttpUrl, control_stream
                    .with_resource_id(control_stream_id)
                    .with_request_body(request_body)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('PUT')
                    .build())
-    resp = requests.put(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+    return api_request.make_request()
 
 
 def delete_control_stream_by_id(server_addr: HttpUrl, control_stream_id: str, api_root: str = APITerms.API.value,
@@ -130,7 +131,7 @@ def retrieve_control_stream_schema_by_id(server_addr: HttpUrl, control_stream_id
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.CONTROL_STREAMS.value)
                    .with_resource_id(control_stream_id)
-                   .for_resource_type(APITerms.SCHEMA.value)
+                   .for_sub_resource_type(APITerms.SCHEMA.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
@@ -139,7 +140,7 @@ def retrieve_control_stream_schema_by_id(server_addr: HttpUrl, control_stream_id
     return api_request.make_request()
 
 
-def update_control_stream_schema_by_id(server_addr: HttpUrl, control_stream_id: str, request_body: dict,
+def update_control_stream_schema_by_id(server_addr: HttpUrl, control_stream_id: str, request_body: Union[str, dict],
                                        api_root: str = APITerms.API.value, headers: dict = None):
     """
     Updates a control stream schema by its id
@@ -150,7 +151,7 @@ def update_control_stream_schema_by_id(server_addr: HttpUrl, control_stream_id: 
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.CONTROL_STREAMS.value)
                    .with_resource_id(control_stream_id)
-                   .for_resource_type(APITerms.SCHEMA.value)
+                   # .for_sub_resource_type(APITerms.SCHEMA.value)
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .with_headers(headers)

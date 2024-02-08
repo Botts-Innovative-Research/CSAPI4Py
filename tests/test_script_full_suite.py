@@ -315,6 +315,46 @@ def test_list_control_streams():
     print(control_streams)
 
 
+def test_list_control_streams_of_system():
+    systems_list = Systems.list_all_systems(server_url)
+    system_id = systems_list["items"][0]["id"]
+    control_streams = ControlChannels.list_control_streams_of_system(server_url, system_id)
+    print(control_streams)
+
+
+def test_retrieve_control_stream_by_id():
+    control_streams = ControlChannels.list_all_control_streams(server_url).json()
+    control_stream_desc = ControlChannels.retrieve_control_stream_description_by_id(server_url,
+                                                                                    control_streams["items"][0]["id"])
+    control_stream_schema = ControlChannels.retrieve_control_stream_schema_by_id(server_url,
+                                                                                 control_streams["items"][0]["id"])
+    print(control_stream_desc.json())
+    print(control_stream_schema.json())
+
+
+def test_update_control_stream_by_id():
+    control_streams = ControlChannels.list_all_control_streams(server_url).json()
+
+    time_schema = TimeSchema(label="Test Control Channel Time (Updated)", definition="http://test.com/Time",
+                             uom=URI(href="http://test.com/TimeUOM"))
+    count_schema = CountSchema(label="Test Control Channel Count (Updated)", definition="http://test.com/Count")
+    bool_schema = BooleanSchema(label="Test Control Channel Boolean (Updated)", definition="http://test.com/Boolean")
+
+    control_schema = JSONControlChannelSchema(command_format=ObservationFormat.SWE_JSON.value,
+                                              params_schema=DataRecordSchema(
+                                                  label="Test Control Channel Record (Updated)",
+                                                  definition="http://test.com/Record",
+                                                  fields=[bool_schema]))
+    request_body = ControlStreamJSONSchema(name="Test Control Channel (Updated)", input_name="TestControlInput1",
+                                           schema=control_schema)
+    print(f'Request Body for Control Stream: {request_body.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = ControlChannels.update_control_stream_schema_by_id(server_url, control_streams["items"][0]["id"],
+                                                              request_body.model_dump_json(exclude_none=True,
+                                                                                           by_alias=True),
+                                                              headers=json_headers)
+    print(resp)
+
+
 """
 Teardown Section
 """
