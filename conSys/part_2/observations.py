@@ -1,3 +1,5 @@
+from typing import Union
+
 import requests
 from pydantic import HttpUrl
 
@@ -5,7 +7,7 @@ from conSys.con_sys_api import ConnectedSystemsRequestBuilder
 from conSys.constants import APITerms
 
 
-def list_all_observations(server_addr: HttpUrl, api_root: str = APITerms.API.value):
+def list_all_observations(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers=None):
     """
     Lists all observations
     :return:
@@ -15,12 +17,15 @@ def list_all_observations(server_addr: HttpUrl, api_root: str = APITerms.API.val
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.OBSERVATIONS.value)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('GET')
                    .build())
-    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
-def list_observations_from_datastream(server_addr: HttpUrl, datastream_id: str, api_root: str = APITerms.API.value):
+def list_observations_from_datastream(server_addr: HttpUrl, datastream_id: str, api_root: str = APITerms.API.value,
+                                      headers=None):
     """
     Lists all observations of a datastream
     :return:
@@ -30,15 +35,17 @@ def list_observations_from_datastream(server_addr: HttpUrl, datastream_id: str, 
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.DATASTREAMS.value)
                    .with_resource_id(datastream_id)
-                   .for_resource_type(APITerms.OBSERVATIONS.value)
+                   .for_sub_resource_type(APITerms.OBSERVATIONS.value)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('GET')
                    .build())
-    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
-def add_observations_to_datastream(server_addr: HttpUrl, datastream_id: str, request_body: dict,
-                                   api_root: str = APITerms.API.value):
+def add_observations_to_datastream(server_addr: HttpUrl, datastream_id: str, request_body: Union[str, dict],
+                                   api_root: str = APITerms.API.value, headers=None):
     """
     Adds an observation to a datastream by its id
     :return:
@@ -48,15 +55,18 @@ def add_observations_to_datastream(server_addr: HttpUrl, datastream_id: str, req
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.DATASTREAMS.value)
                    .with_resource_id(datastream_id)
-                   .for_resource_type(APITerms.OBSERVATIONS.value)
+                   .for_sub_resource_type(APITerms.OBSERVATIONS.value)
                    .with_request_body(request_body)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('POST')
                    .build())
-    resp = requests.post(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
-def retrieve_observation_by_id(server_addr: HttpUrl, observation_id: str, api_root: str = APITerms.API.value):
+def retrieve_observation_by_id(server_addr: HttpUrl, observation_id: str, api_root: str = APITerms.API.value,
+                               headers=None):
     """
     Retrieves an observation by its id
     :return:
@@ -67,13 +77,15 @@ def retrieve_observation_by_id(server_addr: HttpUrl, observation_id: str, api_ro
                    .for_resource_type(APITerms.OBSERVATIONS.value)
                    .with_resource_id(observation_id)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('GET')
                    .build())
-    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
-def update_observation_by_id(server_addr: HttpUrl, observation_id: str, request_body: dict,
-                             api_root: str = APITerms.API.value):
+def update_observation_by_id(server_addr: HttpUrl, observation_id: str, request_body: Union[str, dict],
+                             api_root: str = APITerms.API.value, headers=None):
     """
     Updates an observation by its id
     :return:
@@ -85,12 +97,15 @@ def update_observation_by_id(server_addr: HttpUrl, observation_id: str, request_
                    .with_resource_id(observation_id)
                    .with_request_body(request_body)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('PUT')
                    .build())
-    resp = requests.put(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
-def delete_observation_by_id(server_addr: HttpUrl, observation_id: str, api_root: str = APITerms.API.value):
+def delete_observation_by_id(server_addr: HttpUrl, observation_id: str, api_root: str = APITerms.API.value,
+                             headers=None):
     """
     Deletes an observation by its id
     :return:
@@ -101,6 +116,8 @@ def delete_observation_by_id(server_addr: HttpUrl, observation_id: str, api_root
                    .for_resource_type(APITerms.OBSERVATIONS.value)
                    .with_resource_id(observation_id)
                    .build_url_from_base()
+                   .with_headers(headers)
+                   .with_request_method('DELETE')
                    .build())
-    resp = requests.delete(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
