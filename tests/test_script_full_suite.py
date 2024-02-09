@@ -1,11 +1,13 @@
 import random
+from datetime import datetime
 
 from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
-    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels
+    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels, Observations
 from conSys.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
 from conSys.datamodels.datastreams import SWEDatastreamSchema
 from conSys.datamodels.encoding import JSONEncoding
 from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
+from conSys.datamodels.observations import ObservationOMJSONInline
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
@@ -19,6 +21,7 @@ deployment_json = []
 component_json = []
 command_json = []
 control_channel_json = []
+test_time_start = datetime.utcnow()
 
 """
 Setup Section
@@ -75,11 +78,9 @@ def test_list_systems():
     Tests the listing of systems using the Connected Systems API by listing all systems and all systems in a collection.
     :return:
     """
-    sys_list = Systems.list_all_systems(server_url)["items"]
-    retrieved_systems.extend(sys_list)
-
-    for system in retrieved_systems:
-        print(system)
+    sys_list = Systems.list_all_systems(server_url)
+    print(sys_list.json())
+    retrieved_systems = sys_list.json()
 
 
 def test_retrieve_system():
@@ -87,7 +88,7 @@ def test_retrieve_system():
     Tests the retrieval of a system using the Connected Systems API by retrieving a single system and a batch of systems.
     :return:
     """
-    system_id = retrieved_systems[0]['id']
+    system_id = Systems.list_all_systems(server_url).json()['items'][0]['id']
     retrieved_system = Systems.retrieve_system_by_id(server_url, system_id)
     print(retrieved_system)
     assert retrieved_system is not None
@@ -95,6 +96,7 @@ def test_retrieve_system():
 
 
 def test_update_systems():
+    retrieved_systems = Systems.list_all_systems(server_url, headers=json_headers).json()['items']
     if retrieved_systems is None or len(retrieved_systems) == 0:
         raise ValueError("No systems to update")
     for system in retrieved_systems:
@@ -157,9 +159,8 @@ def test_update_deployment_by_id():
 
 def test_add_systems_to_deployment():
     deployments = Deployments.list_all_deployments(server_url)
-    systems = Systems.list_all_systems(server_url, headers=json_headers)
+    systems = Systems.list_all_systems(server_url, headers=json_headers).json()
     system_link = {'href': f"{server_url}/api/systems/{systems['items'][0]['id']}"}
-    # uri_list = str(system_links).replace("'", "\"")
     resp = Deployments.add_systems_to_deployment(server_url, deployments.json()['items'][0]['id'], str(system_link),
                                                  headers=geo_json_headers)
     print(resp)
@@ -194,6 +195,7 @@ sf_id = None
 
 
 def test_create_sampling_feature():
+    retrieved_systems = Systems.list_all_systems(server_url, headers=json_headers).json()['items']
     geo_sf = GeoJSONBody(type='Feature', id=str(random.randint(1000, 9999)),
                          description="Test Insertion of Sampling Feature via GEOJSON",
                          properties={
@@ -228,12 +230,14 @@ def test_list_sampling_features():
 
 
 def test_list_sampling_feature_by_system():
+    retrieved_systems = Systems.list_all_systems(server_url, headers=json_headers).json()['items']
     sf_list = SamplingFeatures.list_sampling_features_of_system(server_url, retrieved_systems[0]['id'])
     print(sf_list.json())
     sf_id = sf_list.json()['items'][0]['id']
 
 
 def test_update_sampling_feature():
+    retrieved_systems = Systems.list_all_systems(server_url, headers=json_headers).json()['items']
     sf_list = SamplingFeatures.list_sampling_features_of_system(server_url, retrieved_systems[0]['id'])
     print(sf_list.json())
     sf_id = sf_list.json()['items'][0]['id']
@@ -260,14 +264,16 @@ def test_retrieve_sampling_feature_by_id():
 
 
 """
-Datastream Section
+Datastreams and Observations Section
 """
 
 
 def test_create_datastreams():
-    time_schema = TimeSchema(label="Test Datastream Time", definition="http://test.com/Time",
+    retrieved_systems = Systems.list_all_systems(server_url, headers=json_headers).json()['items']
+    time_schema = TimeSchema(label="Test Datastream Time", definition="http://test.com/Time", name="timestamp",
                              uom=URI(href="http://test.com/TimeUOM"))
-    bool_schema = BooleanSchema(label="Test Datastream Boolean", definition="http://test.com/Boolean")
+    bool_schema = BooleanSchema(label="Test Datastream Boolean", definition="http://test.com/Boolean",
+                                name="testboolean")
     datarecord_schema = SWEDatastreamSchema(encoding=JSONEncoding(), obs_format=ObservationFormat.SWE_JSON.value,
                                             record_schema=DataRecordSchema(label="Test Datastream Record",
                                                                            definition="http://test.com/Record",
@@ -283,18 +289,109 @@ def test_create_datastreams():
     print(resp)
 
 
+def test_list_datastreams():
+    ds_list = Datastreams.list_all_datastreams(server_url)
+    print(ds_list.json())
+
+
+def test_list_datastreams_of_system():
+    sys_list = Systems.list_all_systems(server_url, headers=json_headers).json()
+    print(sys_list)
+    ds_list = Datastreams.list_all_datastreams_of_system(server_url, sys_list['items'][0]['id'], headers=json_headers)
+    # print(ds_list.json())
+    print(ds_list)
+
+
+def test_retrieve_datastream_by_id():
+    ds_list = Datastreams.list_all_datastreams(server_url).json()
+    ds = Datastreams.retrieve_datastream_by_id(server_url, ds_list['items'][0]['id'])
+    print(ds.json())
+
+
+def test_update_datastream_by_id():
+    ds_list = Datastreams.list_all_datastreams(server_url).json()
+    time_schema = TimeSchema(label="Test Datastream Time (Updated)", definition="http://test.com/Time",
+                             name="timestamp",
+                             uom=URI(href="http://test.com/TimeUOM"))
+    count_schema = CountSchema(label="Test Datastream Count (Updated)", definition="http://test.com/Count",
+                               name="testcount")
+    bool_schema = BooleanSchema(label="Test Datastream Boolean (Updated)", definition="http://test.com/Boolean",
+                                name="testboolean")
+
+    datarecord_schema = SWEDatastreamSchema(encoding=JSONEncoding(), obs_format=ObservationFormat.SWE_JSON.value,
+                                            record_schema=DataRecordSchema(label="Test Datastream Record (Updated)",
+                                                                           definition="http://test.com/Record",
+                                                                           fields=[bool_schema]))
+    print(f'Datastream Schema: {datarecord_schema.model_dump_json(exclude_none=True, by_alias=True)}')
+    datastream_body = DatastreamBodyJSON(name="Test Datastream (Updated)", output_name="Test Output #1",
+                                         schema=datarecord_schema)
+    temp_test_json = datastream_body.model_dump_json(exclude_none=True, by_alias=True)
+    print(f'Test Datastream JSON: {temp_test_json}')
+    resp = Datastreams.update_datastream_by_id(server_url, ds_list['items'][0]['id'],
+                                               datastream_body.model_dump_json(exclude_none=True, by_alias=True),
+                                               headers=json_headers)
+    print(resp)
+
+
+def test_add_observations_to_datastream():
+    ds_list = Datastreams.list_all_datastreams(server_url).json()
+    the_time = datetime.utcnow().isoformat() + 'Z'  # for now just add the Z because I can't be bothered to validate results without a model
+    time_millis = datetime.now().timestamp() * 1000
+    time_millis = test_time_start.timestamp() * 1000
+    obs = ObservationOMJSONInline(phenomenon_time=the_time,
+                                  result_time=the_time,
+                                  result={
+                                      "timestamp": time_millis,
+                                      "testboolean": True
+                                  })
+    print(f'Observation: {obs.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = Observations.add_observations_to_datastream(server_url, ds_list['items'][0]['id'],
+                                                       obs.model_dump_json(exclude_none=True, by_alias=True),
+                                                       headers=json_headers)
+    print(resp)
+
+
+def test_list_all_observations():
+    obs_list = Observations.list_all_observations(server_url)
+    print(obs_list.json())
+
+
+def test_list_observations_of_datastream():
+    ds_list = Datastreams.list_all_datastreams(server_url).json()
+    obs_list = Observations.list_observations_from_datastream(server_url, ds_list['items'][0]['id'])
+    print(obs_list.json())
+
+
+def test_update_observation_by_id():
+     # Fails because the test server asks for a datastream id, but the model provides one so no idea there for now
+    obs_list = Observations.list_all_observations(server_url).json()
+    the_time = datetime.utcnow().isoformat() + 'Z'  # for now just add the Z because I can't be bothered to validate results without a model
+    time_millis = test_time_start.timestamp() * 1000
+    obs = ObservationOMJSONInline(phenomenon_time=the_time, datastream_id=obs_list['items'][0]['datastream@id'],
+                                  result_time=the_time,
+                                  result={
+                                      "timestamp": time_millis,
+                                      "testboolean": False
+                                  })
+    print(f'Observation: {obs.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = Observations.update_observation_by_id(server_url, obs_list['items'][0]['id'],
+                                                 obs.model_dump_json(exclude_none=True, by_alias=True),
+                                                 headers=json_headers)
+    print(resp)
+
+
 """
 Command and Control Channel Section
 """
 
 
 def test_create_control_channel():
-    systems_list = Systems.list_all_systems(server_url)
+    systems_list = Systems.list_all_systems(server_url, headers=json_headers).json()
     system_id = systems_list["items"][0]["id"]
 
-    time_schema = TimeSchema(label="Test Control Channel Time", definition="http://test.com/Time",
+    time_schema = TimeSchema(label="Test Control Channel Time", definition="http://test.com/Time", name="timestamp",
                              uom=URI(href="http://test.com/TimeUOM"))
-    count_schema = CountSchema(label="Test Control Channel Count", definition="http://test.com/Count")
+    count_schema = CountSchema(label="Test Control Channel Count", definition="http://test.com/Count", name="testcount")
 
     control_schema = JSONControlChannelSchema(command_format=ObservationFormat.SWE_JSON.value,
                                               params_schema=DataRecordSchema(label="Test Control Channel Record",
@@ -316,7 +413,7 @@ def test_list_control_streams():
 
 
 def test_list_control_streams_of_system():
-    systems_list = Systems.list_all_systems(server_url)
+    systems_list = Systems.list_all_systems(server_url, headers=json_headers).json()
     system_id = systems_list["items"][0]["id"]
     control_streams = ControlChannels.list_control_streams_of_system(server_url, system_id)
     print(control_streams)
@@ -336,9 +433,12 @@ def test_update_control_stream_by_id():
     control_streams = ControlChannels.list_all_control_streams(server_url).json()
 
     time_schema = TimeSchema(label="Test Control Channel Time (Updated)", definition="http://test.com/Time",
+                             name="timestamp",
                              uom=URI(href="http://test.com/TimeUOM"))
-    count_schema = CountSchema(label="Test Control Channel Count (Updated)", definition="http://test.com/Count")
-    bool_schema = BooleanSchema(label="Test Control Channel Boolean (Updated)", definition="http://test.com/Boolean")
+    count_schema = CountSchema(label="Test Control Channel Count (Updated)", definition="http://test.com/Count",
+                               name="testcount")
+    bool_schema = BooleanSchema(label="Test Control Channel Boolean (Updated)", definition="http://test.com/Boolean",
+                                name="testboolean")
 
     control_schema = JSONControlChannelSchema(command_format=ObservationFormat.SWE_JSON.value,
                                               params_schema=DataRecordSchema(

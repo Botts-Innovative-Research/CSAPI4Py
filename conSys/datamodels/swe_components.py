@@ -103,6 +103,7 @@ class AnySimpleComponentSchema(AnyComponentSchema):
     nil_values: list = Field(None, serialization_alias='nilValues')
     constraint: Any = Field(None)
     value: Any = Field(None)
+    name: str = Field(...)
 
 
 class AnyScalarComponentSchema(AnySimpleComponentSchema):

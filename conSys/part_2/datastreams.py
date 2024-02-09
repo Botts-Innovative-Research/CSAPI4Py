@@ -35,7 +35,7 @@ def list_all_datastreams_of_system(server_addr: HttpUrl, system_id: str, api_roo
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
-                   .for_resource_type(APITerms.DATASTREAMS.value)
+                   .for_sub_resource_type(APITerms.DATASTREAMS.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')

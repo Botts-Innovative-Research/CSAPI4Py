@@ -20,9 +20,10 @@ def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value, h
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .build_url_from_base()
                    .with_headers(headers)
+                   .with_request_method('GET')
                    .build())
-    resp = requests.get(api_request.url, params=api_request.body, headers=api_request.headers)
-    return resp.json()
+
+    return api_request.make_request()
 
 
 def create_new_systems(server_addr: HttpUrl, request_body: Union[str, dict], api_root: str = APITerms.API.value,

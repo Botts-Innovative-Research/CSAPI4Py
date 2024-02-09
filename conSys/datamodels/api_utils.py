@@ -1,4 +1,16 @@
+from __future__ import annotations
 from pydantic import BaseModel, Field, HttpUrl, field_validator
+
+
+class Link(BaseModel):
+    href: HttpUrl = Field(...)
+    rel: str = Field(None)
+    type: str = Field(None)
+    hreflang: str = Field(None)
+    title: str = Field(None)
+    uid: URI = Field(None)
+    rt: URI = Field(None)
+    interface: URI = Field(None, serialization_alias='if')
 
 
 class UCUMCode(BaseModel):
