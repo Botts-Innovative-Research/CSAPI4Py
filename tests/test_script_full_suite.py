@@ -2,12 +2,14 @@ import random
 from datetime import datetime
 
 from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
-    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels, Observations
+    DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels, Observations, \
+    Commands
 from conSys.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
 from conSys.datamodels.datastreams import SWEDatastreamSchema
 from conSys.datamodels.encoding import JSONEncoding
 from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
 from conSys.datamodels.observations import ObservationOMJSONInline
+from conSys.datamodels.commands import CommandJSON
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
@@ -363,7 +365,7 @@ def test_list_observations_of_datastream():
 
 
 def test_update_observation_by_id():
-     # Fails because the test server asks for a datastream id, but the model provides one so no idea there for now
+    # Fails because the test server asks for a datastream id, but the model provides one so no idea there for now
     obs_list = Observations.list_all_observations(server_url).json()
     the_time = datetime.utcnow().isoformat() + 'Z'  # for now just add the Z because I can't be bothered to validate results without a model
     time_millis = test_time_start.timestamp() * 1000
@@ -455,10 +457,112 @@ def test_update_control_stream_by_id():
     print(resp)
 
 
+def test_add_commands_to_control_stream():
+    control_streams = ControlChannels.list_all_control_streams(server_url).json()
+
+    command_json = CommandJSON(control_id=control_streams["items"][0]["id"],
+                               issue_time=datetime.now().isoformat() + 'Z',
+                               params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
+
+    print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
+                                                             command_json.model_dump_json(exclude_none=True,
+                                                                                          by_alias=True),
+                                                             headers=json_headers)
+    print(resp)
+
+
+def test_list_all_commands():
+    commands = Commands.list_all_commands(server_url)
+    print(commands.json())
+
+
+def test_list_commands_of_control_stream():
+    control_streams = ControlChannels.list_all_control_streams(server_url).json()
+    commands = Commands.list_commands_of_control_channel(server_url, control_streams["items"][0]["id"])
+    print(commands.json())
+
+
+def test_retrieve_command_by_id():
+    commands = Commands.list_all_commands(server_url).json()
+    command = Commands.retrieve_command_by_id(server_url, commands["items"][0]["id"])
+    print(command.json())
+
+
+def test_update_command_description():
+    commands = Commands.list_all_commands(server_url).json()
+    command_json = CommandJSON(control_id=commands["items"][0]["id"],
+                               issue_time=datetime.now().isoformat() + 'Z',
+                               params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 2})
+    resp = Commands.update_command_description(server_url, commands["items"][0]["id"],
+                                               command_json.model_dump_json(exclude_none=True, by_alias=True),
+                                               headers=json_headers)
+    print(resp)
+
+
+def test_add_command_status_report():
+    commands = Commands.list_all_commands(server_url).json()
+    report = CommandJSON(control_id=commands["items"][0]["id"],
+                         issue_time=datetime.now().isoformat() + 'Z',
+                         params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 2})
+    resp = Commands.add_command_status_report(server_url, commands["items"][0]["id"],
+                                              report.model_dump_json(exclude_none=True, by_alias=True),
+                                              headers=json_headers)
+    print(resp)
+
+
+def test_list_command_status_reports():
+    commands = Commands.list_all_commands(server_url).json()
+    reports = Commands.list_command_status_reports(server_url, commands["items"][0]["id"])
+    print(reports.json())
+
+
+def test_retrieve_command_status_report_by_id():
+    commands = Commands.list_all_commands(server_url).json()
+    reports = Commands.list_command_status_reports(server_url, commands["items"][0]["id"]).json()
+    report = Commands.retrieve_command_status_report_by_id(server_url, reports["items"][0]["id"])
+    print(report.json())
+
+
+def test_update_command_status_report():
+    commands = Commands.list_all_commands(server_url).json()
+    reports = Commands.list_command_status_reports(server_url, commands["items"][0]["id"]).json()
+    report = CommandJSON(control_id=commands["items"][0]["id"],
+                         issue_time=datetime.now().isoformat() + 'Z',
+                         params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 3})
+    resp = Commands.update_command_status_report_by_id(server_url, reports["items"][0]["id"],
+                                                       report.model_dump_json(exclude_none=True, by_alias=True),
+                                                       headers=json_headers)
+    print(resp)
+
+
 """
 Teardown Section
 """
 
+# def test_delete_all_command_status_reports():
+#     commands = Commands.list_all_commands(server_url).json()
+#     for command in commands["items"]:
+#         reports = Commands.list_command_status_reports(server_url, command["id"]).json()
+#         for report in reports["items"]:
+#             Commands.delete_command_status_report_by_id(server_url, report["id"])
+#             print(f"Deleted command status report {report['id']}")
+#
+# def test_delete_all_commands():
+#     commands = Commands.list_all_commands(server_url).json()
+#     for command in commands["items"]:
+#         Commands.delete_command_by_id(server_url, command["id"])
+#         print(f"Deleted command {command['id']}")
+
+# def test_delete_all_observations():
+#     obs_list = Observations.list_all_observations(server_url).json()
+#     print(obs_list)
+#     for obs in obs_list["items"]:
+#         print(obs)
+#         Observations.delete_observation_by_id(server_url, obs["id"])
+#         print(f"Deleted observation {obs['id']}")
+#
+#
 # def test_delete_all_collections():
 #     pass
 #
@@ -472,6 +576,17 @@ Teardown Section
 #
 #         SamplingFeatures.delete_sampling_feature_by_id(server_url, sf["id"])
 #         print(f"Deleted sampling feature {sf['id']}")
+#
+#
+# def test_delete_all_control_streams():
+#     control_streams = ControlChannels.list_all_control_streams(server_url).json()
+#     print(control_streams)
+#
+#     for cs in control_streams["items"]:
+#         print(cs)
+#
+#         ControlChannels.delete_control_stream_by_id(server_url, cs["id"])
+#         print(f"Deleted control stream {cs['id']}")
 #
 #
 # def test_delete_all_datastreams():
@@ -497,7 +612,7 @@ Teardown Section
 #
 #
 # def test_delete_all_systems():
-#     sys_list = Systems.list_all_systems(server_url)["items"]
+#     sys_list = Systems.list_all_systems(server_url).json()["items"]
 #     print(sys_list)
 #
 #     for system in sys_list:
