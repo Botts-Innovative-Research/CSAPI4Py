@@ -6,7 +6,7 @@ from conSys import GeoJSONBody, Systems, ControlChannels, ObservationFormat, Com
 from conSys.datamodels.commands import CommandJSON
 from conSys.datamodels.control_streams import ControlStreamJSONSchema, JSONControlChannelSchema
 from conSys.datamodels.swe_components import DataRecordSchema, TimeSchema, CountSchema, URI
-from conSys.comm.mqtt import MQTTClient
+from conSys.comm.mqtt import MQTTCommClient
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
@@ -63,7 +63,7 @@ def test_setup():
 
 
 def test_subscribe_and_command():
-    mqtt_client = MQTTClient(url='localhost')
+    mqtt_client = MQTTCommClient(url='localhost')
 
     control_streams = ControlChannels.list_all_control_streams(server_url).json()
     control_id = control_streams["items"][0]["id"]
@@ -97,12 +97,16 @@ def test_subscribe_and_command():
                                issue_time=datetime.now().isoformat() + 'Z',
                                params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
 
-    print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
-    cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
-                                                                 command_json.model_dump_json(exclude_none=True,
-                                                                                              by_alias=True),
-                                                                 headers=json_headers)
-    print(f'\n*****Command Response: {cmd_resp}*****')
+    # print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
+    # cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
+    #                                                              command_json.model_dump_json(exclude_none=True,
+    #                                                                                           by_alias=True),
+    #                                                              headers=json_headers)
+    # try issuing a command from the MQTT client
+    mqtt_client.publish(f'/api/controls/{control_id}/commands', command_json.model_dump_json(exclude_none=True,
+                                                                                             by_alias=True),
+                        1)
+    # print(f'\n*****Command Response: {cmd_resp}*****')
     status_resp = {
         'id': '*******',
         'command@id': "unknown",

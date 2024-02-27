@@ -71,3 +71,22 @@ class GeometryTypes(Enum):
     MULTI_POINT = "MultiPoint"
     MULTI_LINESTRING = "MultiLineString"
     MULTI_POLYGON = "MultiPolygon"
+
+
+class APIResourceTypes(Enum):
+    """
+    Defines the resource types
+    """
+    COLLECTION = "Collection"
+    COMMAND = "Command"
+    COMPONENT = "Component"
+    CONTROL_CHANNEL = "ControlChannel"
+    DATASTREAM = "Datastream"
+    DEPLOYMENT = "Deployment"
+    OBSERVATION = "Observation"
+    PROCEDURE = "Procedure"
+    PROPERTY = "Property"
+    SAMPLING_FEATURE = "SamplingFeature"
+    SYSTEM = "System"
+    SYSTEM_EVENT = "SystemEvent"
+    SYSTEM_HISTORY = "SystemHistory"

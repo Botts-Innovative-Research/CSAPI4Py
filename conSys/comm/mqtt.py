@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 
 
-class MQTTClient:
+class MQTTCommClient:
     def __init__(self, url, port=1883, username=None, password=None, path='mqtt', client_id="", transport='tcp'):
         """
     Wraps a paho mqtt client to provide a simple interface for interacting with the mqtt server that is customized
@@ -82,7 +82,7 @@ class MQTTClient:
             self.__client.message_callback_add(topic, msg_callback)
 
     def publish(self, topic, payload=None, qos=0, retain=False):
-        self.__client.publish(topic, payload, qos, retain)
+        self.__client.publish(topic, payload, qos, retain=retain)
 
     def disconnect(self):
         self.__client.disconnect()
@@ -182,8 +182,8 @@ class MQTTClient:
     def is_connected(self):
         return self.__is_connected
 
-    def publish(self, topic, msg):
-        self.__client.publish(topic, msg, 1)
+    # def publish(self, topic, msg):
+    #     self.__client.publish(topic, msg, 1)
 
     @staticmethod
     def publish_single(self, topic, msg):
