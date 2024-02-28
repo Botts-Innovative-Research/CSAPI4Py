@@ -1,7 +1,6 @@
-import requests
 from pydantic import BaseModel, HttpUrl, Field
 
-from conSys.endpoints.endpoints import Endpoint
+from conSys.endpoints import Endpoint
 from conSys.request_wrappers import post_request, put_request, get_request, delete_request
 
 

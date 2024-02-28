@@ -5,7 +5,6 @@ from pydantic import HttpUrl
 
 from conSys.con_sys_api import ConnectedSystemsRequestBuilder
 from conSys.constants import APITerms
-from conSys.endpoints.endpoints import Endpoint
 from conSys.request_wrappers import post_request
 
 

@@ -1,6 +1,5 @@
 from .constants import *
 from .datamodels.swe_components import *
-from .endpoints.endpoints import Endpoint
 from .part_1 import capabilities as Capabilities
 from .part_1 import collections_ep as Collections
 from .part_1 import deployments as Deployments

@@ -4,7 +4,6 @@ from pydantic import HttpUrl
 
 from conSys.con_sys_api import ConnectedSystemsRequestBuilder
 from conSys.constants import APITerms
-from conSys.endpoints.endpoints import Endpoint
 
 
 def list_all_procedures(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers: dict = None):
