@@ -1,4 +1,4 @@
-from conSys import Systems, SamplingFeatures, Datastreams, Procedures, ControlChannels, Observations, \
+from conSys4Py import Systems, SamplingFeatures, Datastreams, Procedures, ControlChannels, Observations, \
     Commands
 
 server_url = 'http://localhost:8282/sensorhub'

@@ -1,7 +1,7 @@
 from pydantic import HttpUrl
 
-from conSys.con_sys_api import ConnectedSystemsRequestBuilder
-from conSys.constants import APITerms
+from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
+from conSys4Py.constants import APITerms
 
 
 def list_system_events(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers: dict = None):
@@ -91,6 +91,7 @@ def update_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: st
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
                    .for_sub_resource_type(APITerms.EVENTS.value)
+
                    .with_secondary_resource_id(event_id)
                    .with_request_body(request_body)
                    .build_url_from_base()
@@ -117,4 +118,5 @@ def delete_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: st
                    .with_headers(headers)
                    .with_request_method('DELETE')
                    .build())
+
     return api_request.make_request()

@@ -3,8 +3,8 @@ from __future__ import annotations
 
 from pydantic import BaseModel, Field, HttpUrl
 
-from conSys import Geometry
-from conSys.datamodels.api_utils import Link, URI
+from conSys4Py import Geometry
+from conSys4Py.datamodels.api_utils import Link, URI
 
 
 class SystemEventOMJSON(BaseModel):

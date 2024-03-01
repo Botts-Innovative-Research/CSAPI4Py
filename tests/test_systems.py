@@ -1,6 +1,6 @@
 from pydantic import HttpUrl
 
-from conSys.part_1.systems import list_all_systems, retrieve_system_by_id, list_all_systems_in_collection, \
+from conSys4Py.part_1.systems import list_all_systems, retrieve_system_by_id, list_all_systems_in_collection, \
     list_system_components, list_sampling_features_of_system
 
 

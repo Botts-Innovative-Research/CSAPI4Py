@@ -2,11 +2,11 @@ import json
 import time
 from datetime import datetime
 
-from conSys import GeoJSONBody, Systems, ControlChannels, ObservationFormat, Commands
-from conSys.datamodels.commands import CommandJSON
-from conSys.datamodels.control_streams import ControlStreamJSONSchema, JSONControlChannelSchema
-from conSys.datamodels.swe_components import DataRecordSchema, TimeSchema, CountSchema, URI
-from conSys.comm.mqtt import MQTTCommClient
+from conSys4Py import GeoJSONBody, Systems, ControlChannels, ObservationFormat, Commands
+from conSys4Py.datamodels.commands import CommandJSON
+from conSys4Py.datamodels.control_streams import ControlStreamJSONSchema, JSONControlChannelSchema
+from conSys4Py.datamodels.swe_components import DataRecordSchema, TimeSchema, CountSchema, URI
+from conSys4Py.comm.mqtt import MQTTCommClient
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}

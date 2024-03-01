@@ -1,7 +1,7 @@
 from pydantic import HttpUrl
 
-from conSys.con_sys_api import ConnectedSystemsRequestBuilder
-from conSys.constants import APITerms
+from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
+from conSys4Py.constants import APITerms
 
 
 def list_all_properties(server_addr: HttpUrl, api_root: str = APITerms.API.value):

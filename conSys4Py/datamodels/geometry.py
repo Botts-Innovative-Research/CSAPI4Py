@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from conSys import GeometryTypes
+from conSys4Py import GeometryTypes
 
 
 # TODO: Add specific validations for each type

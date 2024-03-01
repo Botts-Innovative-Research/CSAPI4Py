@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Union, Optional, List
 
-from conSys.datamodels.api_utils import Link
+from conSys4Py.datamodels.api_utils import Link
 
 
 class ObservationOMJSONInline(BaseModel):

@@ -3,9 +3,9 @@ from typing import Union
 import requests
 from pydantic import HttpUrl
 
-from conSys.con_sys_api import ConnectedSystemsRequestBuilder
-from conSys.constants import APITerms
-from conSys.request_wrappers import post_request
+from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
+from conSys4Py.constants import APITerms
+from conSys4Py.request_wrappers import post_request
 
 
 def list_all_systems(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers: dict = None):

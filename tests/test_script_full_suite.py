@@ -1,15 +1,15 @@
 import random
 from datetime import datetime
 
-from conSys import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
+from conSys4Py import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
     DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels, Observations, \
     Commands
-from conSys.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
-from conSys.datamodels.datastreams import SWEDatastreamSchema
-from conSys.datamodels.encoding import JSONEncoding
-from conSys.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
-from conSys.datamodels.observations import ObservationOMJSONInline
-from conSys.datamodels.commands import CommandJSON
+from conSys4Py.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
+from conSys4Py.datamodels.datastreams import SWEDatastreamSchema
+from conSys4Py.datamodels.encoding import JSONEncoding
+from conSys4Py.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
+from conSys4Py.datamodels.observations import ObservationOMJSONInline
+from conSys4Py.datamodels.commands import CommandJSON
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}

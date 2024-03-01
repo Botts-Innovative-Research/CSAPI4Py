@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from conSys import APIResourceTypes, APITerms
+from conSys4Py import APIResourceTypes, APITerms
 
 
 def determine_parent_type(res_type: APIResourceTypes):
