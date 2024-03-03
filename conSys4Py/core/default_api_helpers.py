@@ -2,6 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 
 from conSys4Py import APIResourceTypes, APITerms
+from conSys4Py.con_sys_api import ConnectedSystemAPIRequest
 
 
 def determine_parent_type(res_type: APIResourceTypes):
@@ -77,30 +78,73 @@ class APIHelper(ABC):
     password = None
     user_auth = False
 
-    def create_resource(self, res_type: APIResourceTypes, json_data: any, parent_res_id: str = None):
+    def create_resource(self, res_type: APIResourceTypes, json_data: any, parent_res_id: str = None,
+                        from_collection: bool = False):
         """
         Creates a resource of the given type with the given data, will attempt to create a sub-resource if parent_res_id
         is provided.
         :param res_type:
         :param json_data:
         :param parent_res_id:
+        :param from_collection:
         :return:
         """
-        pass
+        url = self.resource_url_resolver(res_type, None, parent_res_id, from_collection)
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='POST', auth=self.get_helper_auth(),
+                                                body=json_data)
+        return api_request.make_request()
 
     def retrieve_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
                           from_collection: bool = False,
                           collection_id: str = None):
-        pass
+        """
+        Retrieves a resource or list of resources if no res_id is provided, will attempt to retrieve a sub-resource if
+        parent_res_id is provided.
+        :param res_type:
+        :param res_id:
+        :param parent_res_id:
+        :param from_collection:
+        :param collection_id:
+        :return:
+        """
+        url = self.resource_url_resolver(res_type, res_id, parent_res_id, from_collection)
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='GET', auth=self.get_helper_auth())
+        return api_request.make_request()
 
-    def update_resource(self, res_type: APIResourceTypes, res_id: str, json_data: any, parent_res_id: str = None):
-        pass
+    def update_resource(self, res_type: APIResourceTypes, res_id: str, json_data: any, parent_res_id: str = None,
+                        from_collection: bool = False):
+        """
+        Updates a resource of the given type by its id, if necessary, will attempt to update a sub-resource if
+        parent_res_id is provided.
+        :param res_type:
+        :param res_id:
+        :param json_data:
+        :param parent_res_id:
+        :param from_collection:
+        :return:
+        """
+        url = self.resource_url_resolver(res_type, None, parent_res_id, from_collection)
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='PUT', auth=self.get_helper_auth(),
+                                                body=json_data)
+        return api_request.make_request()
 
-    def delete_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None):
-        pass
+    def delete_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
+                        from_collection: bool = False):
+        """
+        Deletes a resource of the given type by its id, if necessary, will attempt to delete a sub-resource if
+        parent_res_id is provided.
+        :param res_type:
+        :param res_id:
+        :param parent_res_id:
+        :param from_collection:
+        :return:
+        """
+        url = self.resource_url_resolver(res_type, res_id, parent_res_id, from_collection)
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='DELETE', auth=self.get_helper_auth())
+        return api_request.make_request()
 
     # Helpers
-    def resource_url_resolver(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
+    def resource_url_resolver(self, res_type: APIResourceTypes, res_id: str = None, parent_res_id: str = None,
                               from_collection: bool = False):
         if res_type is None:
             raise ValueError('Resource type must contain a valid APIResourceType')
@@ -129,3 +173,8 @@ class APIHelper(ABC):
             url = f'{url}/{res_id}'
 
         return url
+
+    def get_helper_auth(self):
+        if self.user_auth:
+            return self.username, self.password
+        return None
