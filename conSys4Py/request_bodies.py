@@ -78,7 +78,7 @@ class DatastreamBodyJSON(BaseModel):
     result_time_interval: str = Field(None, serialization_alias='resultTimeInterval')
     result_type: DatastreamResultTypes = Field(None, serialization_alias='resultType')
     links: list = Field(None)
-    schema: SerializeAsAny[DatastreamSchema] = Field(...)
+    datastream_schema: SerializeAsAny[DatastreamSchema] = Field(..., serialization_alias='schema')
 
 
 class RequestBody(BaseModel):
