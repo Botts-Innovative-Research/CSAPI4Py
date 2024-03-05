@@ -90,3 +90,19 @@ class APIResourceTypes(Enum):
     SYSTEM = "System"
     SYSTEM_EVENT = "SystemEvent"
     SYSTEM_HISTORY = "SystemHistory"
+
+
+class EncodingSchema(Enum):
+    """
+    Defines the encoding formats
+    """
+    JSON = "application/json"
+    XML = "application/xml"
+    SWE_XML = "application/swe+xml"
+    SWE_JSON = "application/swe+json"
+    SWE_CSV = "application/swe+csv"
+    SWE_BINARY = "application/swe+binary"
+    SWE_TEXT = "application/swe+text"
+    GEO_JSON = "application/geo+json"
+    SML_JSON = "application/sml+json"
+    OM_JSON = "application/om+json"
