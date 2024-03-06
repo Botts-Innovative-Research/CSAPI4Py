@@ -56,8 +56,6 @@ def resource_type_to_endpoint(res_type: APIResourceTypes, parent_type: APIResour
             return APITerms.DATASTREAMS.value
         case APIResourceTypes.OBSERVATION:
             return APITerms.OBSERVATIONS.value
-        case APIResourceTypes.SYSTEM:
-            return APITerms.SYSTEMS.value
         case APIResourceTypes.SYSTEM_EVENT:
             return APITerms.SYSTEM_EVENTS.value
         case APIResourceTypes.SAMPLING_FEATURE:
@@ -76,11 +74,11 @@ def resource_type_to_endpoint(res_type: APIResourceTypes, parent_type: APIResour
 
 @dataclass
 class APIHelper(ABC):
-    server_url = None
-    api_root = "/api"
-    username = None
-    password = None
-    user_auth = False
+    server_url: str = None
+    api_root: str = "api"
+    username: str = None
+    password: str = None
+    user_auth: bool = False
 
     def create_resource(self, res_type: APIResourceTypes, json_data: any, parent_res_id: str = None,
                         from_collection: bool = False, url_endpoint: str = None):
@@ -230,7 +228,7 @@ class DefaultObjectRepresentations(BaseModel):
     """
     # Part 1
     collections: str = Field(EncodingSchema.JSON.value)
-    deployments: str = Field(EncodingSchema. GEO_JSON.value)
+    deployments: str = Field(EncodingSchema.GEO_JSON.value)
     procedures: str = Field(EncodingSchema.GEO_JSON.value)
     properties: str = Field(EncodingSchema.SML_JSON.value)
     sampling_features: str = Field(EncodingSchema.GEO_JSON.value)
@@ -243,5 +241,3 @@ class DefaultObjectRepresentations(BaseModel):
     system_events: str = Field(EncodingSchema.OM_JSON.value)
     system_history: str = Field(EncodingSchema.GEO_JSON.value)
     # TODO: validate schemas for each resource to amke sure they are allowed per the spec
-
-
