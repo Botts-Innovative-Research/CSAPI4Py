@@ -1,5 +1,9 @@
 import conSys4Py.core.default_api_helpers as helpers
-from conSys4Py import APIResourceTypes
+from conSys4Py import APIResourceTypes, GeoJSONBody
+
+server_url = 'http://localhost:8282/sensorhub'
+api_endpoint = 'api'
+geojson_headers = {"Content-Type": "application/geo+json"}
 
 
 def test_determine_parent_type():
@@ -34,8 +38,8 @@ def test_resource_type_to_ep():
 
 
 def test_resolve_resource_ep():
-    server_url = 'http://localhost:8181'
-    api_endpoint = 'api'
+    # server_url = 'http://localhost:8181'
+    # api_endpoint = 'api'
     api_helper = helpers.APIHelper(server_url, api_endpoint)
     assert api_helper.server_url == server_url
     assert api_helper.api_root == api_endpoint
@@ -49,11 +53,26 @@ def test_resolve_resource_ep():
 
 
 def test_user_auth():
-    server_url = 'http://localhost:8181'
-    api_endpoint = 'api'
+    # server_url = 'http://localhost:8181'
+    # api_endpoint = 'api'
     uname = 'user'
     pword = 'pass'
     api_helper = helpers.APIHelper(server_url, api_endpoint, uname, pword, True)
     assert api_helper.get_helper_auth() == ('user', 'pass')
     api_helper.user_auth = False
     assert api_helper.get_helper_auth() is None
+
+
+def test_create_resource_system():
+    system_obj = GeoJSONBody(type='Feature', id='',
+                             properties={
+                                 "featureType": "http://www.w3.org/ns/ssn/System",
+                                 "name": f'Test System - APIHelper',
+                                 "uid": f'urn:test:client:apihelper',
+                                 "description": "A Test System inserted using the APIHelper class"
+                             })
+    api_helper = helpers.APIHelper(server_url, api_endpoint)
+    result = api_helper.create_resource(res_type=APIResourceTypes.SYSTEM,
+                                        json_data=system_obj.model_dump_json(exclude_none=True, by_alias=True),
+                                        req_headers=geojson_headers)
+    print(result)

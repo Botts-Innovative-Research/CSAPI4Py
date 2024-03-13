@@ -81,10 +81,11 @@ class APIHelper(ABC):
     user_auth: bool = False
 
     def create_resource(self, res_type: APIResourceTypes, json_data: any, parent_res_id: str = None,
-                        from_collection: bool = False, url_endpoint: str = None):
+                        from_collection: bool = False, url_endpoint: str = None, req_headers: dict = None):
         """
         Creates a resource of the given type with the given data, will attempt to create a sub-resource if parent_res_id
         is provided.
+        :param req_headers:
         :param res_type:
         :param json_data:
         :param parent_res_id:
@@ -98,15 +99,16 @@ class APIHelper(ABC):
         else:
             url = f'{self.server_url}/{self.api_root}/{url_endpoint}'
         api_request = ConnectedSystemAPIRequest(url=url, request_method='POST', auth=self.get_helper_auth(),
-                                                body=json_data)
+                                                body=json_data, headers=req_headers)
         return api_request.make_request()
 
     def retrieve_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
                           from_collection: bool = False,
-                          collection_id: str = None, url_endpoint: str = None):
+                          collection_id: str = None, url_endpoint: str = None, req_headers: dict = None):
         """
         Retrieves a resource or list of resources if no res_id is provided, will attempt to retrieve a sub-resource if
         parent_res_id is provided.
+        :param req_headers:
         :param res_type:
         :param res_id:
         :param parent_res_id:
@@ -119,14 +121,16 @@ class APIHelper(ABC):
             url = self.resource_url_resolver(res_type, None, parent_res_id, from_collection)
         else:
             url = f'{self.server_url}/{self.api_root}/{url_endpoint}'
-        api_request = ConnectedSystemAPIRequest(url=url, request_method='GET', auth=self.get_helper_auth())
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='GET', auth=self.get_helper_auth(),
+                                                headers=req_headers)
         return api_request.make_request()
 
     def update_resource(self, res_type: APIResourceTypes, res_id: str, json_data: any, parent_res_id: str = None,
-                        from_collection: bool = False, url_endpoint: str = None):
+                        from_collection: bool = False, url_endpoint: str = None, req_headers: dict = None):
         """
         Updates a resource of the given type by its id, if necessary, will attempt to update a sub-resource if
         parent_res_id is provided.
+        :param req_headers:
         :param res_type:
         :param res_id:
         :param json_data:
@@ -140,14 +144,15 @@ class APIHelper(ABC):
         else:
             url = f'{self.server_url}/{self.api_root}/{url_endpoint}'
         api_request = ConnectedSystemAPIRequest(url=url, request_method='PUT', auth=self.get_helper_auth(),
-                                                body=json_data)
+                                                body=json_data, headers=req_headers)
         return api_request.make_request()
 
     def delete_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
-                        from_collection: bool = False, url_endpoint: str = None):
+                        from_collection: bool = False, url_endpoint: str = None, req_headers: dict = None):
         """
         Deletes a resource of the given type by its id, if necessary, will attempt to delete a sub-resource if
         parent_res_id is provided.
+        :param req_headers:
         :param res_type:
         :param res_id:
         :param parent_res_id:
@@ -159,7 +164,8 @@ class APIHelper(ABC):
             url = self.resource_url_resolver(res_type, None, parent_res_id, from_collection)
         else:
             url = f'{self.server_url}/{self.api_root}/{url_endpoint}'
-        api_request = ConnectedSystemAPIRequest(url=url, request_method='DELETE', auth=self.get_helper_auth())
+        api_request = ConnectedSystemAPIRequest(url=url, request_method='DELETE', auth=self.get_helper_auth(),
+                                                headers=req_headers)
         return api_request.make_request()
 
     # Helpers

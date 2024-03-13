@@ -42,7 +42,7 @@ def test_setup():
                                                                              definition="http://test.com/Record",
                                                                              fields=[time_schema, count_schema]))
     request_body = ControlStreamJSONSchema(name="Test Control Channel", input_name="TestControlInput1",
-                                           schema=control_schema)
+                                           control_stream_schema=control_schema)
     ctl_resp = ControlChannels.add_control_streams_to_system(server_url, system_id,
                                                              request_body.model_dump_json(exclude_none=True,
                                                                                           by_alias=True),
@@ -50,16 +50,16 @@ def test_setup():
     print(ctl_resp)
 
     control_streams = ControlChannels.list_all_control_streams(server_url).json()
-    command_json = CommandJSON(control_id=control_streams["items"][0]["id"],
-                               issue_time=datetime.now().isoformat() + 'Z',
-                               params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
-
-    print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
-    cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
-                                                                 command_json.model_dump_json(exclude_none=True,
-                                                                                              by_alias=True),
-                                                                 headers=json_headers)
-    print(cmd_resp)
+    # command_json = CommandJSON(control_id=control_streams["items"][0]["id"],
+    #                            issue_time=datetime.now().isoformat() + 'Z',
+    #                            params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
+    #
+    # print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
+    # cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
+    #                                                              command_json.model_dump_json(exclude_none=True,
+    #                                                                                           by_alias=True),
+    #                                                              headers=json_headers)
+    # print(cmd_resp)
 
 
 def test_subscribe_and_command():
@@ -97,19 +97,32 @@ def test_subscribe_and_command():
                                issue_time=datetime.now().isoformat() + 'Z',
                                params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
 
-    # print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
-    # cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
-    #                                                              command_json.model_dump_json(exclude_none=True,
-    #                                                                                           by_alias=True),
-    #                                                              headers=json_headers)
+    print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
+    cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
+                                                                 command_json.model_dump_json(exclude_none=True,
+                                                                                              by_alias=True),
+                                                                 headers=json_headers)
     # try issuing a command from the MQTT client
-    mqtt_client.publish(f'/api/controls/{control_id}/commands', command_json.model_dump_json(exclude_none=True,
-                                                                                             by_alias=True),
-                        1)
+    # mqtt_client.publish(f'/api/controls/{control_id}/commands', command_json.model_dump_json(exclude_none=True,
+    #                                                                                          by_alias=True),
+    #                     1)
     # print(f'\n*****Command Response: {cmd_resp}*****')
     status_resp = {
         'id': '*******',
         'command@id': "unknown",
         'statusCode': 'COMPLETED'
     }
-    Commands.add_command_status_reports(server_url, "0", json.dumps(status_resp))
+    # Commands.add_command_status_reports(server_url, "0", json.dumps(status_resp))
+
+
+def test_command_dahua():
+    system_id = "tstk16o31es4m"
+    control_stream_id = "k08p16h6k4a6c"
+    control_input = CommandJSON(control_id=control_stream_id, issue_time=datetime.now().isoformat() + 'Z',
+                                params={"pan": 180})
+    print(f'Issuing Command: {control_input.model_dump_json(exclude_none=True, by_alias=True)}')
+    cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_stream_id,
+                                                                 control_input.model_dump_json(exclude_none=True,
+                                                                                              by_alias=True),
+                                                                 headers=json_headers)
+    print(f'\n*****Command Response: {cmd_resp}*****')

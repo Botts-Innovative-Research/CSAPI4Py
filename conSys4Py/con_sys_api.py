@@ -1,3 +1,5 @@
+from typing import Union
+
 from pydantic import BaseModel, HttpUrl, Field
 
 from conSys4Py.endpoints import Endpoint
@@ -6,11 +8,11 @@ from conSys4Py.request_wrappers import post_request, put_request, get_request, d
 
 class ConnectedSystemAPIRequest(BaseModel):
     url: HttpUrl = Field(None)
-    body: dict = Field(None)
+    body: Union[dict, str] = Field(None)
     params: dict = Field(None)
     request_method: str = Field('GET')
     headers: dict = Field(None)
-    auth: tuple = Field(None)
+    auth: Union[tuple, None] = Field(None)
 
     def make_request(self):
         match self.request_method:
