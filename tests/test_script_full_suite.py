@@ -282,10 +282,10 @@ def test_create_datastreams():
                                                                            fields=[time_schema, bool_schema]))
 
     print(f'Datastream Schema: {datarecord_schema.model_dump_json(exclude_none=True, by_alias=True)}')
-    datastream_body = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1", schema=datarecord_schema)
+    datastream_body = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1", datastream_schema=datarecord_schema)
     temp_test_json = datastream_body.model_dump_json(exclude_none=True, by_alias=True)
     print(f'Test Datastream JSON: {temp_test_json}')
-    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[0]['id'],
+    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[1]['id'],
                                                  datastream_body.model_dump_json(exclude_none=True, by_alias=True),
                                                  headers=json_headers)
     print(resp)
