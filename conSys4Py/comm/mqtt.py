@@ -20,14 +20,14 @@ class MQTTCommClient:
         self.__client_id = client_id
         self.__transport = transport
 
-        self.__client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+        self.__client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=client_id)
 
         if self.__transport == 'websockets':
             self.__client.ws_set_options(path=self.__path)
 
         if username is not None and password is not None:
             self.__client.username_pw_set(username, password)
-            self.__client.tls_set()
+            self.__client.tls_set(tls_version=mqtt.ssl.PROTOCOL_TLSv1_2)
 
         self.__client.on_connect = self.on_connect
         self.__client.on_subscribe = self.on_subscribe
@@ -52,7 +52,7 @@ class MQTTCommClient:
         print(f'{msg.payload.decode("utf-8")}')
 
     @staticmethod
-    def on_publish(client, userdata, mid):
+    def on_publish(client, userdata, mid, info, properties):
         print(f'Published: {mid}')
 
     @staticmethod
@@ -61,11 +61,11 @@ class MQTTCommClient:
 
     @staticmethod
     def on_disconnect(client, userdata, dc_flag, rc, properties):
-        print(f'Disconnected: {rc}')
+        print(f'Client {client} disconnected: {dc_flag} {rc}')
 
-    def connect(self):
-        print(f'Connecting to {self.__url}:{self.__port}')
-        self.__client.connect(self.__url, self.__port)
+    def connect(self, keepalive=60):
+        # print(f'Connecting to {self.__url}:{self.__port}')
+        self.__client.connect(self.__url, self.__port, keepalive=keepalive)
 
     def subscribe(self, topic, qos=0, msg_callback=None):
         """
@@ -182,9 +182,6 @@ class MQTTCommClient:
     def is_connected(self):
         return self.__is_connected
 
-    # def publish(self, topic, msg):
-    #     self.__client.publish(topic, msg, 1)
-
     @staticmethod
     def publish_single(self, topic, msg):
         self.__client.single(topic, msg, 0)
@@ -192,3 +189,6 @@ class MQTTCommClient:
     @staticmethod
     def publish_multiple(self, topic, msgs):
         self.__client.multiple(msgs, )
+
+    def tls_set(self):
+        self.__client.tls_set()

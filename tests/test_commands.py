@@ -62,7 +62,7 @@ def test_setup():
     # print(cmd_resp)
 
 
-def test_subscribe_and_command():
+def subscribe_and_command():
     mqtt_client = MQTTCommClient(url='localhost')
 
     control_streams = ControlChannels.list_all_control_streams(server_url).json()
@@ -74,12 +74,17 @@ def test_subscribe_and_command():
         print("Received Command")
         print(f'{msg.payload.decode("utf-8")}')
         control_stream_id = control_id
+
+        payload = msg.payload.decode("utf-8")
+        p_dict = json.loads(payload)
+        id = p_dict["id"]
+
         resp = {
-            'id': '*******',
+            'id': id,
             'command@id': control_stream_id,
             'statusCode': 'COMPLETED'
         }
-        # client.publish(f'/api/controls/{control_stream_id}/status', payload=json.dumps(resp), qos=1)
+        client.publish(f'/api/controls/{control_stream_id}/status', payload=json.dumps(resp), qos=1)
 
     def on_message_all(client, userdata, msg):
         print(f'\nReceived Message:{msg}')
@@ -93,29 +98,26 @@ def test_subscribe_and_command():
     mqtt_client.start()
 
     time.sleep(2)
-    command_json = CommandJSON(control_id=control_streams["items"][0]["id"],
-                               issue_time=datetime.now().isoformat() + 'Z',
-                               params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
 
-    print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
-    cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
-                                                                 command_json.model_dump_json(exclude_none=True,
-                                                                                              by_alias=True),
-                                                                 headers=json_headers)
-    # try issuing a command from the MQTT client
+    # print(f'Issuing Command: {command_json.model_dump_json(exclude_none=True, by_alias=True)}')
+    # cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_streams["items"][0]["id"],
+    #                                                              command_json.model_dump_json(exclude_none=True,
+    #                                                                                           by_alias=True),
+    #                                                              headers=json_headers)
+    # # try issuing a command from the MQTT client
     # mqtt_client.publish(f'/api/controls/{control_id}/commands', command_json.model_dump_json(exclude_none=True,
     #                                                                                          by_alias=True),
     #                     1)
     # print(f'\n*****Command Response: {cmd_resp}*****')
-    status_resp = {
-        'id': '*******',
-        'command@id': "unknown",
-        'statusCode': 'COMPLETED'
-    }
+    # status_resp = {
+    #     'id': '*******',
+    #     'command@id': "unknown",
+    #     'statusCode': 'COMPLETED'
+    # }
     # Commands.add_command_status_reports(server_url, "0", json.dumps(status_resp))
 
 
-def test_command_dahua():
+def command_dahua():
     system_id = "tstk16o31es4m"
     control_stream_id = "k08p16h6k4a6c"
     control_input = CommandJSON(control_id=control_stream_id, issue_time=datetime.now().isoformat() + 'Z',
@@ -123,6 +125,78 @@ def test_command_dahua():
     print(f'Issuing Command: {control_input.model_dump_json(exclude_none=True, by_alias=True)}')
     cmd_resp = Commands.send_commands_to_specific_control_stream(server_url, control_stream_id,
                                                                  control_input.model_dump_json(exclude_none=True,
-                                                                                              by_alias=True),
+                                                                                               by_alias=True),
                                                                  headers=json_headers)
     print(f'\n*****Command Response: {cmd_resp}*****')
+
+
+def create_status_listener_client(control_id: str):
+    def on_connect(client, userdata, flags, rc, props=None):
+        print(f"Status Updater Client connected with result code {rc}")
+
+    def on_command(client, userdata, msg):
+        payload = msg.payload.decode("utf-8")
+        print(f"Received Command: {payload}")
+        p_dict = json.loads(payload)
+        id = p_dict["id"]
+
+        resp = {
+            'id': id,
+            # 'command@id': control_id,
+            'statusCode': 'COMPLETED'
+        }
+
+        print(f'Issuing Status: {resp}')
+
+        client.publish(f'/api/controls/{control_id}/status', payload=json.dumps(resp), qos=1)
+
+    mqtt_client = MQTTCommClient(url='localhost')
+    mqtt_client.set_on_connect(on_connect)
+    mqtt_client.connect(keepalive=60)
+    mqtt_client.set_on_message_callback(f'/api/controls/{control_id}/commands', on_command)
+    mqtt_client.subscribe(f'/api/controls/{control_id}/commands')
+    mqtt_client.start()
+
+    return mqtt_client
+
+
+def create_command_client(control_id: str):
+    def on_connect(client, userdata, flags, rc, props=None):
+        print(f"Command Client connected with result code {rc}")
+
+    def on_status(client, userdata, msg):
+        print("")
+        print(f"Received Status: {msg.payload.decode('utf-8')}")
+        print("")
+
+    mqtt_client = MQTTCommClient(url='localhost')
+    mqtt_client.set_on_connect(on_connect)
+    mqtt_client.connect()
+    mqtt_client.set_on_message_callback(f'/api/controls/o1l72d8md66a0/status', on_status)
+    mqtt_client.subscribe(f'/api/controls/o1l72d8md66a0/status')
+    mqtt_client.start()
+
+    return mqtt_client
+
+
+def create_test_command(control_id):
+    command_json = CommandJSON(control_id=control_id,
+                               issue_time=datetime.now().isoformat() + 'Z',
+                               params={"timestamp": datetime.now().timestamp() * 1000, "testcount": 1})
+
+    return command_json.model_dump_json(exclude_none=True, by_alias=True)
+
+
+def test_command_with_status_updates():
+    control_streams = ControlChannels.list_all_control_streams(server_url).json()
+    control_id = control_streams["items"][0]["id"]
+
+    # Create a Command Client For Status Updates
+    status_updater = create_status_listener_client(control_id)
+    command_sender = create_command_client(control_id)
+
+    # Wait for a bit
+    time.sleep(1)
+
+    # Send a Command
+    command_sender.publish(f'/api/controls/{control_id}/commands', create_test_command(control_id), 0)

@@ -102,7 +102,7 @@ class APIHelper(ABC):
                                                 body=json_data, headers=req_headers)
         return api_request.make_request()
 
-    def retrieve_resource(self, res_type: APIResourceTypes, res_id: str, parent_res_id: str = None,
+    def retrieve_resource(self, res_type: APIResourceTypes, res_id: str = None, parent_res_id: str = None,
                           from_collection: bool = False,
                           collection_id: str = None, url_endpoint: str = None, req_headers: dict = None):
         """
@@ -118,7 +118,7 @@ class APIHelper(ABC):
         :return:
         """
         if url_endpoint is None:
-            url = self.resource_url_resolver(res_type, None, parent_res_id, from_collection)
+            url = self.resource_url_resolver(res_type, res_id, parent_res_id, from_collection)
         else:
             url = f'{self.server_url}/{self.api_root}/{url_endpoint}'
         api_request = ConnectedSystemAPIRequest(url=url, request_method='GET', auth=self.get_helper_auth(),
