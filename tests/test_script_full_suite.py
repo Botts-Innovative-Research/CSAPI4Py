@@ -11,7 +11,7 @@ from conSys4Py.datamodels.swe_components import BooleanSchema, TimeSchema, DataR
 from conSys4Py.datamodels.observations import ObservationOMJSONInline
 from conSys4Py.datamodels.commands import CommandJSON
 
-server_url = "http://localhost:8282/sensorhub"
+server_url = "http://localhost:8585/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
 sml_json_headers = {"Content-Type": "application/sml+json"}
 json_headers = {"Content-Type": "application/json"}

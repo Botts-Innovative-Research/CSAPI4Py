@@ -128,7 +128,7 @@ def retrieve_datastream_schema(server_addr: HttpUrl, datastream_id: str, api_roo
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.DATASTREAMS.value)
                    .with_resource_id(datastream_id)
-                   .for_resource_type(APITerms.SCHEMA.value)
+                   .for_sub_resource_type(APITerms.SCHEMA.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
