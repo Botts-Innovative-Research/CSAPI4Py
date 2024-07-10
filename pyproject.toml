@@ -1,27 +1,22 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
+[tool.poetry]
 name = "conSys4Py"
 version = "0.0.1-alpha.3"
-authors = [
-    { name = "Ian Patterson", email = "ian@botts-inc.com" }
-]
+authors = ["Ian Patterson <ian@botts-inc.com>"]
 description = "OGC Connected Systems API client for Python"
 readme = "README.md"
-requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3.10",
-    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
-    "Operating System :: OS Independent"
-]
 
-dependencies = [
-    "pydantic",
-    "requests",
-    "paho-mqtt"
-]
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^2.7.4"
+requests = "^2.26.0"
+paho-mqtt = "^2.1.0"
 
-[project.urls]
-"Homepage" = "https://opensensorhub.org"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+sphinx = "^7.3.7"
+flake8 = "^7.1.0"
+sphinx-rtd-theme = "^2.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -84,6 +84,9 @@ class MQTTCommClient:
     def publish(self, topic, payload=None, qos=0, retain=False):
         self.__client.publish(topic, payload, qos, retain=retain)
 
+    def unsubscribe(self, topic):
+        self.__client.unsubscribe(topic)
+
     def disconnect(self):
         self.__client.disconnect()
 
