@@ -24,6 +24,11 @@ building a library on top of  this project.
 -----------------------------------------
 If you need the most flexibility, you can create custom requests using the request builder and API helper objects
 
+.. note::
+
+    The following examples will not convert the responses back into Objects, but it is possible to do so
+    using the appropriate class's `model_validate` method on the response object's string representation.
+
 Interacting with Systems
 ============================
 
@@ -65,3 +70,46 @@ Just be sure to convert them to a JSON string before passing them to the `create
     sml_as_str = sml.model_dump_json(exclude_none=True, by_alias=True)
     Systems.create_new_systems(server_url, sml_as_str, uname="test", pword="test",
                                headers=sml_json_headers)
+
+Datastreams and Observations
+============================
+
+Add a Datastream and Observation
+------------------------------------------------------------
+.. note::
+
+    This assumes that the user knows the system id and the datastream id
+
+.. code-block:: python
+
+    from consys4py import Datastreams
+
+    time_schema = TimeSchema(label="Test Datastream Time", definition="http://test.com/Time", name="timestamp",
+                             uom=URI(href="http://test.com/TimeUOM"))
+    bool_schema = BooleanSchema(label="Test Datastream Boolean", definition="http://test.com/Boolean",
+                                name="testboolean")
+    datarecord_schema = SWEDatastreamSchema(encoding=JSONEncoding(), obs_format=ObservationFormat.SWE_JSON.value,
+                                            record_schema=DataRecordSchema(label="Test Datastream Record",
+                                                                           definition="http://test.com/Record",
+                                                                           fields=[time_schema, bool_schema]))
+
+    datastream_body = DatastreamBodyJSON(name="Test Datastream", output_name="Test Output #1", datastream_schema=datarecord_schema)
+    temp_test_json = datastream_body.model_dump_json(exclude_none=True, by_alias=True)
+
+    resp = Datastreams.add_datastreams_to_system(server_url, retrieved_systems[1]['id'],
+                                                 datastream_body.model_dump_json(exclude_none=True, by_alias=True),
+                                                 headers=json_headers)
+
+    the_time = datetime.utcnow().isoformat() + 'Z'
+    time_millis = test_time_start.timestamp() * 1000
+
+    obs = ObservationOMJSONInline(phenomenon_time=the_time,
+                                  result_time=the_time,
+                                  result={
+                                      "timestamp": time_millis,
+                                      "testboolean": True
+                                  })
+    print(f'Observation: {obs.model_dump_json(exclude_none=True, by_alias=True)}')
+    resp = Observations.add_observations_to_datastream(server_url, ds_id,
+                                                       obs.model_dump_json(exclude_none=True, by_alias=True),
+                                                       headers=json_headers)
