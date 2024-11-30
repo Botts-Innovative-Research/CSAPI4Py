@@ -5,14 +5,14 @@ from typing import Union, Any
 
 from pydantic import BaseModel, Field, field_validator, SerializeAsAny
 
-from conSys4Py import GeometryTypes
+from conSys4Py.constants import GeometryTypes
 from conSys4Py.datamodels.api_utils import UCUMCode, URI
 from conSys4Py.datamodels.geometry import Geometry
 
 """
  NOTE: The following classes are used to represent the Record Schemas that are required for use with Datastreams
 The names are likely to change to include a "Schema" suffix to differentiate them from the actual data structures.
-The current scope of the project likely excludes conversion from received data to actual SWE Common data structures, 
+The current scope of the project likely excludes conversion from received data to actual SWE Common data structures,
 in the event this is added it will most likely be in a separate module as those structures have use cases outside of
 the API solely
 """
@@ -80,10 +80,10 @@ class GeometrySchema(AnyComponentSchema):
     updatable: bool = Field(False)
     optional: bool = Field(False)
     definition: str = Field(...)
-    constraint: dict = {
-        'geomTypes': [GeometryTypes.POINT.value, GeometryTypes.LINESTRING.value, GeometryTypes.POLYGON.value,
-                      GeometryTypes.MULTI_POINT.value, GeometryTypes.MULTI_LINESTRING.value,
-                      GeometryTypes.MULTI_POLYGON.value]}
+    constraint: dict = Field(default_factory=dict(
+        geomTypes=[GeometryTypes.POINT.value, GeometryTypes.LINESTRING.value, GeometryTypes.POLYGON.value,
+                   GeometryTypes.MULTI_POINT.value, GeometryTypes.MULTI_LINESTRING.value,
+                   GeometryTypes.MULTI_POLYGON.value]))
     nil_values: list = Field(None, serialization_alias='nilValues')
     srs: str = Field(...)
     value: Geometry = Field(None)

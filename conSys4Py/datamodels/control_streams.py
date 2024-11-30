@@ -21,7 +21,8 @@ class ControlStreamJSONSchema(BaseModel):
     valid_time: list = Field(None, serialization_alias='validTime')
     input_name: str = Field(None, serialization_alias='inputName')
     links: list = Field(None)
-    control_stream_schema: SerializeAsAny[Union[SWEControlChannelSchema, JSONControlChannelSchema]] = Field(..., serialization_alias='schema')
+    control_stream_schema: SerializeAsAny[Union[SWEControlChannelSchema, JSONControlChannelSchema]] = Field(...,
+                                                                                                            serialization_alias='schema')
 
 
 class SWEControlChannelSchema(BaseModel):

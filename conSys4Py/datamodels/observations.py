@@ -1,7 +1,7 @@
 from datetime import datetime
+from typing import Union, List
 
 from pydantic import BaseModel, Field
-from typing import Union, Optional, List
 
 from conSys4Py.datamodels.api_utils import Link
 
@@ -17,4 +17,3 @@ class ObservationOMJSONInline(BaseModel):
     parameters: dict = Field(None)
     result: Union[int, float, str, dict, list] = Field(...)
     result_links: List[Link] = Field(None, serialization_alias="result@links")
-

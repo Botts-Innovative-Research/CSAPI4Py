@@ -1,6 +1,5 @@
 from typing import Union
 
-import requests
 from pydantic import HttpUrl
 
 from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
