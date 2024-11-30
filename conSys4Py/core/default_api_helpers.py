@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 
-from conSys4Py import APIResourceTypes, APITerms, EncodingSchema
 from conSys4Py.con_sys_api import ConnectedSystemAPIRequest
+from conSys4Py.constants import APIResourceTypes, EncodingSchema, APITerms
 
 
 def determine_parent_type(res_type: APIResourceTypes):
