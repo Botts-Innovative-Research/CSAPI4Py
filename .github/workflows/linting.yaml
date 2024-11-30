@@ -17,4 +17,4 @@ jobs:
           poetry install --with dev
       - name: Lint
         run: |
-          poetry run flake8
+          poetry run flake8 consys4py
