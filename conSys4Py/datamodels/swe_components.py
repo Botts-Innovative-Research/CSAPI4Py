@@ -80,10 +80,20 @@ class GeometrySchema(AnyComponentSchema):
     updatable: bool = Field(False)
     optional: bool = Field(False)
     definition: str = Field(...)
-    constraint: dict = Field(default_factory=dict(
-        geomTypes=[GeometryTypes.POINT.value, GeometryTypes.LINESTRING.value, GeometryTypes.POLYGON.value,
-                   GeometryTypes.MULTI_POINT.value, GeometryTypes.MULTI_LINESTRING.value,
-                   GeometryTypes.MULTI_POLYGON.value]))
+    # constraint: dict = Field(default_factory=dict(
+    #     geomTypes=[GeometryTypes.POINT.value, GeometryTypes.LINESTRING.value, GeometryTypes.POLYGON.value,
+    #                GeometryTypes.MULTI_POINT.value, GeometryTypes.MULTI_LINESTRING.value,
+    #                GeometryTypes.MULTI_POLYGON.value]))
+    constraint: dict = Field(default_factory=lambda: {
+        'geomTypes': [
+            GeometryTypes.POINT.value,
+            GeometryTypes.LINESTRING.value,
+            GeometryTypes.POLYGON.value,
+            GeometryTypes.MULTI_POINT.value,
+            GeometryTypes.MULTI_LINESTRING.value,
+            GeometryTypes.MULTI_POLYGON.value
+        ]
+    })
     nil_values: list = Field(None, serialization_alias='nilValues')
     srs: str = Field(...)
     value: Geometry = Field(None)

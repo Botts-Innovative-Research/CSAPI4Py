@@ -10,7 +10,7 @@ class APITerms(Enum):
     COMMANDS = 'commands'
     COMPONENTS = 'components'
     CONFORMANCE = 'conformance'
-    CONTROL_STREAMS = 'controls'
+    CONTROL_STREAMS = 'controlstreams'
     DATASTREAMS = 'datastreams'
     DEPLOYMENTS = 'deployments'
     EVENTS = 'events'
