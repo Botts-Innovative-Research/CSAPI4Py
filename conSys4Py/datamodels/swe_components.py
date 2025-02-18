@@ -39,8 +39,9 @@ class DataRecordSchema(AnyComponentSchema):
 
 
 class VectorSchema(AnyComponentSchema):
-    label: str = "Vector"
-    type: str = Field(...)
+    label: str = Field(...)
+    name: str = Field(...)
+    type: str = "Vector"
     definition: str = Field(...)
     reference_frame: str = Field(...)
     local_frame: str = Field(None)
