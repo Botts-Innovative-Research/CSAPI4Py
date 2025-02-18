@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "conSys4Py"
-version = "0.0.1-alpha.3"
+version = "0.0.1-alpha.4"
 authors = ["Ian Patterson <ian@botts-inc.com>"]
 description = "OGC Connected Systems API client for Python"
 readme = "README.md"
