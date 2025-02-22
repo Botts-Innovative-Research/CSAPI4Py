@@ -12,9 +12,9 @@ from consys4py.datamodels.swe_components import BooleanSchema, TimeSchema, DataR
 from consys4py.datamodels.observations import ObservationOMJSONInline
 from consys4py.datamodels.commands import CommandJSON
 from consys4py.part_1 import systems, deployments, sampling_features
-from conSys4Py.part_2 import datastreams, observations, commands, control_channels
-from conSys4Py.request_bodies import DatastreamBodyJSON, GeoJSONBody, SmlJSONBody
-from conSys4Py.utilities import model_utils
+from consys4py.part_2 import datastreams, observations, commands, control_channels
+from consys4py.request_bodies import DatastreamBodyJSON, GeoJSONBody, SmlJSONBody
+from consys4py.utilities import model_utils
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
