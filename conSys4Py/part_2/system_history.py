@@ -1,7 +1,7 @@
 from pydantic import HttpUrl
 
-from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
-from conSys4Py.constants import APITerms
+from consys4py.con_sys_api import ConnectedSystemsRequestBuilder
+from consys4py.constants import APITerms
 
 
 def list_system_history(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value, headers: dict = None):

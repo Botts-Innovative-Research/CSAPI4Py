@@ -2,10 +2,10 @@ from typing import Union
 
 from pydantic import BaseModel, HttpUrl, Field, model_serializer, RootModel, SerializeAsAny
 
-from conSys4Py.constants import DatastreamResultTypes
-from conSys4Py.datamodels.datastreams import DatastreamSchema
-from conSys4Py.datamodels.geometry import Geometry
-from conSys4Py.sensor_ml.sml import TypeOf
+from consys4py.constants import DatastreamResultTypes
+from consys4py.datamodels.datastreams import DatastreamSchema
+from consys4py.datamodels.geometry import Geometry
+from consys4py.sensor_ml.sml import TypeOf
 
 
 # TODO: Consider some sort of Abstract Base Class for all valid request bodies to inherit from to reduce the complexity

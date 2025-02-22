@@ -2,16 +2,16 @@ import pytest
 
 from datetime import datetime
 
-from conSys4Py import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
+from consys4py import Systems, SamplingFeatures, Datastreams, SmlJSONBody, GeoJSONBody, model_utils, \
     DatastreamBodyJSON, ObservationFormat, URI, Procedures, Geometry, Deployments, ControlChannels, Observations, \
     Commands
-from conSys4Py.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
-from conSys4Py.datamodels.datastreams import SWEDatastreamSchema
-from conSys4Py.datamodels.encoding import JSONEncoding
-from conSys4Py.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
-from conSys4Py.datamodels.observations import ObservationOMJSONInline
-from conSys4Py.datamodels.commands import CommandJSON
-from conSys4Py.datamodels.system_events_and_history import SystemEventOMJSON
+from consys4py.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, JSONControlChannelSchema
+from consys4py.datamodels.datastreams import SWEDatastreamSchema
+from consys4py.datamodels.encoding import JSONEncoding
+from consys4py.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
+from consys4py.datamodels.observations import ObservationOMJSONInline
+from consys4py.datamodels.commands import CommandJSON
+from consys4py.datamodels.system_events_and_history import SystemEventOMJSON
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}
