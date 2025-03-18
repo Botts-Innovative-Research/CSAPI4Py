@@ -51,7 +51,7 @@ class VectorSchema(AnyComponentSchema):
 
 class DataArraySchema(AnyComponentSchema):
     type: str = "DataArray"
-    element_count: int = Field(..., serialization_alias='elementCount')  # Should type of Count
+    element_count: dict | str | CountSchema = Field(..., serialization_alias='elementCount')  # Should type of Count
     element_type: SerializeAsAny[list[AnyComponentSchema]] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
