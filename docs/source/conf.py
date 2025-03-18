@@ -21,7 +21,7 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'conSys4Py'
+project = 'consys4py'
 copyright = '2024, Botts Innovative Research, Inc.'
 author = 'Ian Patterson'
 release = '0.1'

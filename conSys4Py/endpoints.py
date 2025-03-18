@@ -4,7 +4,7 @@ import requests
 # import websockets
 from pydantic import BaseModel, Field
 
-from conSys4Py.constants import APITerms
+from consys4py.constants import APITerms
 
 
 class Endpoint(BaseModel):

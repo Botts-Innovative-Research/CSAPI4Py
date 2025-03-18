@@ -1,4 +1,4 @@
-from conSys4Py.con_sys_api import ConnectedSystemsRequestBuilder
+from consys4py.con_sys_api import ConnectedSystemsRequestBuilder
 
 
 def test_get_params():

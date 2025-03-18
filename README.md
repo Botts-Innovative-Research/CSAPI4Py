@@ -1,4 +1,4 @@
-# Connected Systems API for Python (conSys4Py)
+# Connected Systems API for Python (consys4py)
 This package aims to help simplify the process of communicating with OGC's Connected Systems API.
 
 ---

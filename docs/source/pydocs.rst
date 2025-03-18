@@ -1,7 +1,7 @@
 ConSys4Py API Docs
 ==================
 
-.. automodule:: conSys4Py
+.. automodule:: consys4py
     :members:
     :undoc-members:
     :show-inheritance:

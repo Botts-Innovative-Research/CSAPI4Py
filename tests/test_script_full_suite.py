@@ -1,20 +1,20 @@
 import random
 from datetime import datetime
 
-from conSys4Py.constants import ObservationFormat
-from conSys4Py.datamodels.api_utils import URI
-from conSys4Py.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, \
+from consys4py.constants import ObservationFormat
+from consys4py.datamodels.api_utils import URI
+from consys4py.datamodels.control_streams import ControlStreamJSONSchema, SWEControlChannelSchema, \
     JSONControlChannelSchema
-from conSys4Py.datamodels.datastreams import SWEDatastreamSchema
-from conSys4Py.datamodels.encoding import JSONEncoding
-from conSys4Py.datamodels.geometry import Geometry
-from conSys4Py.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
-from conSys4Py.datamodels.observations import ObservationOMJSONInline
-from conSys4Py.datamodels.commands import CommandJSON
-from conSys4Py.part_1 import systems, deployments, sampling_features
-from conSys4Py.part_2 import datastreams, observations, commands, control_channels
-from conSys4Py.request_bodies import DatastreamBodyJSON, GeoJSONBody, SmlJSONBody
-from conSys4Py.utilities import model_utils
+from consys4py.datamodels.datastreams import SWEDatastreamSchema
+from consys4py.datamodels.encoding import JSONEncoding
+from consys4py.datamodels.geometry import Geometry
+from consys4py.datamodels.swe_components import BooleanSchema, TimeSchema, DataRecordSchema, CountSchema
+from consys4py.datamodels.observations import ObservationOMJSONInline
+from consys4py.datamodels.commands import CommandJSON
+from consys4py.part_1 import systems, deployments, sampling_features
+from consys4py.part_2 import datastreams, observations, commands, control_channels
+from consys4py.request_bodies import DatastreamBodyJSON, GeoJSONBody, SmlJSONBody
+from consys4py.utilities import model_utils
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}

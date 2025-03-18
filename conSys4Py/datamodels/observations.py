@@ -3,7 +3,7 @@ from typing import Union, List
 
 from pydantic import BaseModel, Field
 
-from conSys4Py.datamodels.api_utils import Link
+from consys4py.datamodels.api_utils import Link
 
 
 class ObservationOMJSONInline(BaseModel):
