@@ -51,6 +51,7 @@ class VectorSchema(AnyComponentSchema):
 
 class DataArraySchema(AnyComponentSchema):
     type: str = "DataArray"
+    name: str = Field(...)
     element_count: dict | str | CountSchema = Field(..., serialization_alias='elementCount')  # Should type of Count
     element_type: SerializeAsAny[list[AnyComponentSchema]] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
@@ -59,7 +60,7 @@ class DataArraySchema(AnyComponentSchema):
 
 class MatrixSchema(AnyComponentSchema):
     type: str = "Matrix"
-    element_count: int = Field(..., serialization_alias='elementCount')  # Should be type of Count
+    element_count: dict | str | CountSchema = Field(..., serialization_alias='elementCount')  # Should be type of Count
     element_type: SerializeAsAny[list[AnyComponentSchema]] = Field(..., serialization_alias='elementType')
     encoding: str = Field(...)  # TODO: implement an encodings class
     values: list = Field(None)
@@ -81,10 +82,6 @@ class GeometrySchema(AnyComponentSchema):
     updatable: bool = Field(False)
     optional: bool = Field(False)
     definition: str = Field(...)
-    # constraint: dict = Field(default_factory=dict(
-    #     geomTypes=[GeometryTypes.POINT.value, GeometryTypes.LINESTRING.value, GeometryTypes.POLYGON.value,
-    #                GeometryTypes.MULTI_POINT.value, GeometryTypes.MULTI_LINESTRING.value,
-    #                GeometryTypes.MULTI_POLYGON.value]))
     constraint: dict = Field(default_factory=lambda: {
         'geomTypes': [
             GeometryTypes.POINT.value,
