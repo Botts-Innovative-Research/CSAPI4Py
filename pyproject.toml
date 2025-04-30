@@ -1,22 +1,27 @@
-[tool.poetry]
+[project]
 name = "consys4py"
-version = "0.0.1-alpha.8"
-authors = ["Ian Patterson <ian@botts-inc.com>"]
+version = "0.0.1-beta.1"
+authors = [{ name = "Ian Patterson", email = "ian@botts-inc.com" }]
 description = "OGC Connected Systems API client for Python"
 readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+    "Operating System :: OS Independent"
+]
+requires-python = ">=3.10, <4.0"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-pydantic = "^2.7.4"
-requests = "^2.26.0"
-paho-mqtt = "^2.1.0"
+dependencies = [
+    "pydantic>=2.7.4",
+    "requests>=2.26.0",
+    "paho-mqtt>=2.1.0"
+]
+dev-dependencies = [
+    "pytest>=8.2.2",
+    "sphinx>=7.3.7",
+    "flake8>=7.1.0",
+    "sphinx-rtd-theme>=2.0.0"
+]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.2"
-sphinx = "^7.3.7"
-flake8 = "^7.1.0"
-sphinx-rtd-theme = "^2.0.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.setuptools]
+packages = ["consys4py"]
