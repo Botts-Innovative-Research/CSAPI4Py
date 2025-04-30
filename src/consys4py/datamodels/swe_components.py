@@ -5,9 +5,9 @@ from typing import Union, Any
 
 from pydantic import BaseModel, Field, field_validator, SerializeAsAny
 
-from consys4py.constants import GeometryTypes
-from consys4py.datamodels.api_utils import UCUMCode, URI
-from consys4py.datamodels.geometry import Geometry
+from src.consys4py.constants import GeometryTypes
+from src.consys4py.datamodels.api_utils import UCUMCode, URI
+from src.consys4py.datamodels.geometry import Geometry
 
 """
  NOTE: The following classes are used to represent the Record Schemas that are required for use with Datastreams

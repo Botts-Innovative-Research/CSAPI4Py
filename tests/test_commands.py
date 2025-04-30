@@ -3,10 +3,10 @@ import time
 from datetime import datetime
 
 from consys4py import GeoJSONBody, Systems, ControlChannels, ObservationFormat, Commands
-from consys4py.datamodels.commands import CommandJSON
-from consys4py.datamodels.control_streams import ControlStreamJSONSchema, JSONControlChannelSchema
-from consys4py.datamodels.swe_components import DataRecordSchema, TimeSchema, CountSchema, URI
-from consys4py.comm.mqtt import MQTTCommClient
+from src.consys4py.datamodels import CommandJSON
+from src.consys4py.datamodels import ControlStreamJSONSchema, JSONControlChannelSchema
+from src.consys4py.datamodels import DataRecordSchema, TimeSchema, CountSchema, URI
+from src.consys4py.comm import MQTTCommClient
 
 server_url = "http://localhost:8282/sensorhub"
 geo_json_headers = {"Content-Type": "application/geo+json"}

@@ -1,6 +1,7 @@
 [project]
 name = "consys4py"
-version = "0.0.1-beta.1"
+version = "0.0.1-beta.3"
+#dynamic = ["version"]
 authors = [{ name = "Ian Patterson", email = "ian@botts-inc.com" }]
 description = "OGC Connected Systems API client for Python"
 readme = "README.md"
@@ -11,11 +12,15 @@ classifiers = [
 ]
 requires-python = ">=3.10, <4.0"
 
+#[tool.setuptools.dynamic]
+#version = { use_scm_version = { version_scheme = "post-release" } }
+
 dependencies = [
     "pydantic>=2.7.4",
     "requests>=2.26.0",
     "paho-mqtt>=2.1.0"
 ]
+
 [dependency-groups]
 dev = [
     "pytest>=8.2.2",
@@ -25,4 +30,4 @@ dev = [
 ]
 
 [tool.setuptools]
-packages = ["consys4py"]
+package-dir = { "" = "src" }

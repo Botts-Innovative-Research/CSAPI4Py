@@ -4,8 +4,8 @@ from typing import Union
 
 from pydantic import BaseModel, Field, SerializeAsAny
 
-from consys4py.datamodels.encoding import Encoding
-from consys4py.datamodels.swe_components import AnyComponentSchema
+from src.consys4py.datamodels.encoding import Encoding
+from src.consys4py.datamodels.swe_components import AnyComponentSchema
 
 
 class ControlStreamJSONSchema(BaseModel):

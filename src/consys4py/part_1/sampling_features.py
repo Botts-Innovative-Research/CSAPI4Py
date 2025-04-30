@@ -1,18 +1,20 @@
+from typing import Union
+
 from pydantic import HttpUrl
 
-from consys4py.con_sys_api import ConnectedSystemsRequestBuilder
-from consys4py.constants import APITerms
+from src.consys4py.con_sys_api import ConnectedSystemsRequestBuilder
+from src.consys4py.constants import APITerms
 
 
-def list_system_events(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers: dict = None):
+def list_all_sampling_features(server_addr: HttpUrl, api_root: str = APITerms.API.value, headers=None):
     """
-    Lists all system events
+    Lists all sampling features in the server at the default API endpoint
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
     api_request = (builder.with_server_url(server_addr)
                    .with_api_root(api_root)
-                   .for_resource_type(APITerms.SYSTEM_EVENTS.value)
+                   .for_resource_type(APITerms.SAMPLING_FEATURES.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
@@ -20,10 +22,10 @@ def list_system_events(server_addr: HttpUrl, api_root: str = APITerms.API.value,
     return api_request.make_request()
 
 
-def list_events_by_system_id(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value,
-                             headers: dict = None):
+def list_sampling_features_of_system(server_addr: HttpUrl, system_id: str, api_root: str = APITerms.API.value,
+                                     headers=None):
     """
-    Lists all events of a system
+    Lists all sampling features of a system by its id
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
@@ -31,7 +33,7 @@ def list_events_by_system_id(server_addr: HttpUrl, system_id: str, api_root: str
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
-                   .for_sub_resource_type(APITerms.EVENTS.value)
+                   .for_sub_resource_type(APITerms.SAMPLING_FEATURES.value)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
@@ -39,10 +41,10 @@ def list_events_by_system_id(server_addr: HttpUrl, system_id: str, api_root: str
     return api_request.make_request()
 
 
-def add_new_system_events(server_addr: HttpUrl, system_id: str, request_body: dict,
-                          api_root: str = APITerms.API.value, headers: dict = None):
+def create_new_sampling_features(server_addr: HttpUrl, system_id: str, request_body: Union[dict, str],
+                                 api_root: str = APITerms.API.value, headers=None):
     """
-    Adds a new system event to a system by its id
+    Create a new sampling feature as defined by the request body
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
@@ -50,7 +52,7 @@ def add_new_system_events(server_addr: HttpUrl, system_id: str, request_body: di
                    .with_api_root(api_root)
                    .for_resource_type(APITerms.SYSTEMS.value)
                    .with_resource_id(system_id)
-                   .for_sub_resource_type(APITerms.EVENTS.value)
+                   .for_sub_resource_type(APITerms.SAMPLING_FEATURES.value)
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .with_headers(headers)
@@ -59,19 +61,17 @@ def add_new_system_events(server_addr: HttpUrl, system_id: str, request_body: di
     return api_request.make_request()
 
 
-def retrieve_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: str,
-                                api_root: str = APITerms.API.value, headers: dict = None):
+def retrieve_sampling_feature_by_id(server_addr: HttpUrl, sampling_feature_id: str, api_root: str = APITerms.API.value,
+                                    headers=None):
     """
-    Retrieves a system event by its id
+    Retrieve a sampling feature by its ID
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
     api_request = (builder.with_server_url(server_addr)
                    .with_api_root(api_root)
-                   .for_resource_type(APITerms.SYSTEMS.value)
-                   .with_resource_id(system_id)
-                   .for_sub_resource_type(APITerms.EVENTS.value)
-                   .with_secondary_resource_id(event_id)
+                   .for_resource_type(APITerms.SAMPLING_FEATURES.value)
+                   .with_resource_id(sampling_feature_id)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('GET')
@@ -79,20 +79,17 @@ def retrieve_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: 
     return api_request.make_request()
 
 
-def update_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: str, request_body: dict,
-                              api_root: str = APITerms.API.value, headers: dict = None):
+def update_sampling_feature_by_id(server_addr: HttpUrl, sampling_feature_id: str, request_body: Union[dict, str],
+                                  api_root: str = APITerms.API.value, headers=None):
     """
-    Updates a system event by its id
+    Update a sampling feature by its ID
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
     api_request = (builder.with_server_url(server_addr)
                    .with_api_root(api_root)
-                   .for_resource_type(APITerms.SYSTEMS.value)
-                   .with_resource_id(system_id)
-                   .for_sub_resource_type(APITerms.EVENTS.value)
-
-                   .with_secondary_resource_id(event_id)
+                   .for_resource_type(APITerms.SAMPLING_FEATURES.value)
+                   .with_resource_id(sampling_feature_id)
                    .with_request_body(request_body)
                    .build_url_from_base()
                    .with_headers(headers)
@@ -101,22 +98,19 @@ def update_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: st
     return api_request.make_request()
 
 
-def delete_system_event_by_id(server_addr: HttpUrl, system_id: str, event_id: str, api_root: str = APITerms.API.value,
-                              headers: dict = None):
+def delete_sampling_feature_by_id(server_addr: HttpUrl, sampling_feature_id: str, api_root: str = APITerms.API.value,
+                                  headers=None):
     """
-    Deletes a system event by its id
+    Delete a sampling feature by its ID
     :return:
     """
     builder = ConnectedSystemsRequestBuilder()
     api_request = (builder.with_server_url(server_addr)
                    .with_api_root(api_root)
-                   .for_resource_type(APITerms.SYSTEMS.value)
-                   .with_resource_id(system_id)
-                   .for_sub_resource_type(APITerms.EVENTS.value)
-                   .with_secondary_resource_id(event_id)
+                   .for_resource_type(APITerms.SAMPLING_FEATURES.value)
+                   .with_resource_id(sampling_feature_id)
                    .build_url_from_base()
                    .with_headers(headers)
                    .with_request_method('DELETE')
                    .build())
-
     return api_request.make_request()

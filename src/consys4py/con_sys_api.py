@@ -2,8 +2,8 @@ from typing import Union
 
 from pydantic import BaseModel, HttpUrl, Field
 
-from consys4py.endpoints import Endpoint
-from consys4py.request_wrappers import post_request, put_request, get_request, delete_request
+from src.consys4py.endpoints import Endpoint
+from src.consys4py.request_wrappers import post_request, put_request, get_request, delete_request
 
 
 class ConnectedSystemAPIRequest(BaseModel):

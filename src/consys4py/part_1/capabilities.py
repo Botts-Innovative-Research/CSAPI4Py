@@ -1,7 +1,7 @@
 from pydantic import HttpUrl
 
-from consys4py.con_sys_api import ConnectedSystemsRequestBuilder
-from consys4py.constants import APITerms
+from src.consys4py.con_sys_api import ConnectedSystemsRequestBuilder
+from src.consys4py.constants import APITerms
 
 
 def get_landing_page(server_addr: HttpUrl, api_root: str = APITerms.API.value):

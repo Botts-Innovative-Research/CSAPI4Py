@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field, field_validator, SerializeAsAny
 
-from consys4py.constants import ObservationFormat
-from consys4py.datamodels.encoding import Encoding
-from consys4py.datamodels.swe_components import AnyComponentSchema
+from src.consys4py.constants import ObservationFormat
+from src.consys4py.datamodels.encoding import Encoding
+from src.consys4py.datamodels.swe_components import AnyComponentSchema
 
 
 class DatastreamSchema(BaseModel):

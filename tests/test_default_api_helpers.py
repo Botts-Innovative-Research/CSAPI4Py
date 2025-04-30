@@ -1,4 +1,4 @@
-import consys4py.core.default_api_helpers as helpers
+import src.consys4py.core.default_api_helpers as helpers
 from consys4py import APIResourceTypes, GeoJSONBody
 
 server_url = 'http://localhost:8282/sensorhub'
