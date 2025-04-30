@@ -16,7 +16,8 @@ dependencies = [
     "requests>=2.26.0",
     "paho-mqtt>=2.1.0"
 ]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "pytest>=8.2.2",
     "sphinx>=7.3.7",
     "flake8>=7.1.0",
