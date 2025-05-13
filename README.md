@@ -6,7 +6,7 @@ This package aims to help simplify the process of communicating with OGC's Conne
 - [OGC API - Connected Systems Github](https://github.com/opengeospatial/ogcapi-connected-systems)
 - [Part 1: Reference(DRAFT)](https://docs.ogc.org/DRAFTS/23-001r0.html)
 - [Part 1: OpenAPI](https://opengeospatial.github.io/ogcapi-connected-systems/redoc/?url=../api/part1/openapi/openapi-connectedsystems-1.yaml)
-- [Part 2: Reference(DRAFT)](https://opengeospatial.github.io/ogcapi-connected-systems/api/part2/standard/23-002r0.html)
+- [Part 2: Reference(DRAFT)](https://docs.ogc.org/DRAFTS/23-002r0.html)
 - [Part 2: OpenAPI](https://opengeospatial.github.io/ogcapi-connected-systems/redoc/?url=../api/part2/openapi/openapi-connectedsystems-2.yaml)
 ---
 ## Using the API
