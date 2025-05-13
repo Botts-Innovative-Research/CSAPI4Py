@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutorials &mdash; consys4py 0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=2709fde1"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="ConSys4Py API Docs" href="pydocs.html" />
+    <link rel="prev" title="ConSys4Py Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            consys4py
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#using-the-api">Using the API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#direct-api-calls">1. Direct API calls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#default-api-helper">2. Default API Helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#custom-api-requests">3. Custom API Requests</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#interacting-with-systems">Interacting with Systems</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#list-systems">List Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retrieve-specific-system">Retrieve Specific System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#add-create-system">Add/Create System</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#datastreams-and-observations">Datastreams and Observations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#add-a-datastream-and-observation">Add a Datastream and Observation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pydocs.html">ConSys4Py API Docs</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">consys4py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Tutorials</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorials.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="index.html" class="btn btn-neutral float-left" title="ConSys4Py Documentation" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydocs.html" class="btn btn-neutral float-right" title="ConSys4Py API Docs" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tutorials">
+<h1>Tutorials<a class="headerlink" href="#tutorials" title="Link to this heading"></a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is a work in progress, some features may change and packages may move or be removed
+before the 1.0 release.</p>
+</div>
+</section>
+<section id="using-the-api">
+<h1>Using the API<a class="headerlink" href="#using-the-api" title="Link to this heading"></a></h1>
+<p>There are three main ways to interact with the API</p>
+<section id="direct-api-calls">
+<h2>1. Direct API calls<a class="headerlink" href="#direct-api-calls" title="Link to this heading"></a></h2>
+<p>In the modules for parts 1 and 2, there are separate files that represent the different parts of the API. These files
+contain methods for interacting with the remote server directly.</p>
+</section>
+<section id="default-api-helper">
+<h2>2. Default API Helper<a class="headerlink" href="#default-api-helper" title="Link to this heading"></a></h2>
+<p>Using the Default API helper allows for repeated calls to the same API server. This is useful when
+building a library on top of  this project.</p>
+</section>
+<section id="custom-api-requests">
+<h2>3. Custom API Requests<a class="headerlink" href="#custom-api-requests" title="Link to this heading"></a></h2>
+<p>If you need the most flexibility, you can create custom requests using the request builder and API helper objects</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The following examples will not convert the responses back into Objects, but it is possible to do so
+using the appropriate class’s <cite>model_validate</cite> method on the response object’s string representation.</p>
+</div>
+</section>
+</section>
+<section id="interacting-with-systems">
+<h1>Interacting with Systems<a class="headerlink" href="#interacting-with-systems" title="Link to this heading"></a></h1>
+<section id="list-systems">
+<h2>List Systems<a class="headerlink" href="#list-systems" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using a direct call from <cite>Systems</cite> file</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">consys4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">Systems</span>
+
+<span class="n">Systems</span><span class="o">.</span><span class="n">list_all_systems</span><span class="p">(</span><span class="n">server_url</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="retrieve-specific-system">
+<h2>Retrieve Specific System<a class="headerlink" href="#retrieve-specific-system" title="Link to this heading"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">consys4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">Systems</span>
+
+<span class="n">Systems</span><span class="o">.</span><span class="n">retrieve_system_by_id</span><span class="p">(</span><span class="n">server_url</span><span class="p">,</span> <span class="n">system_id</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="add-create-system">
+<h2>Add/Create System<a class="headerlink" href="#add-create-system" title="Link to this heading"></a></h2>
+<p>The method for creating a new system does take a string or properly structured <cite>dict</cite>.
+For ease of use, the <cite>SmlJSONBody</cite> or <cite>GeoJSONBody</cite> can be used. They use Pydantic to validate the data.
+Just be sure to convert them to a JSON string before passing them to the <cite>create_new_systems</cite> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">consys4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">Systems</span>
+
+<span class="n">sml</span> <span class="o">=</span> <span class="n">SmlJSONBody</span><span class="p">(</span><span class="n">object_type</span><span class="o">=</span><span class="s1">&#39;SimpleProcess&#39;</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)),</span>
+                       <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A Test System inserted from the Python Connected Systems API Client&quot;</span><span class="p">,</span>
+                       <span class="n">unique_id</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;urn:test:client:sml-single&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Test System - SML Single&#39;</span><span class="p">,</span>
+                       <span class="n">definition</span><span class="o">=</span><span class="s2">&quot;http://test.com&quot;</span><span class="p">)</span>
+
+<span class="n">sml_as_str</span> <span class="o">=</span> <span class="n">sml</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">Systems</span><span class="o">.</span><span class="n">create_new_systems</span><span class="p">(</span><span class="n">server_url</span><span class="p">,</span> <span class="n">sml_as_str</span><span class="p">,</span> <span class="n">uname</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">pword</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span>
+                           <span class="n">headers</span><span class="o">=</span><span class="n">sml_json_headers</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="datastreams-and-observations">
+<h1>Datastreams and Observations<a class="headerlink" href="#datastreams-and-observations" title="Link to this heading"></a></h1>
+<section id="add-a-datastream-and-observation">
+<h2>Add a Datastream and Observation<a class="headerlink" href="#add-a-datastream-and-observation" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This assumes that the user knows the system id and the datastream id</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">consys4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">Datastreams</span>
+
+<span class="n">time_schema</span> <span class="o">=</span> <span class="n">TimeSchema</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test Datastream Time&quot;</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="s2">&quot;http://test.com/Time&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+                         <span class="n">uom</span><span class="o">=</span><span class="n">URI</span><span class="p">(</span><span class="n">href</span><span class="o">=</span><span class="s2">&quot;http://test.com/TimeUOM&quot;</span><span class="p">))</span>
+<span class="n">bool_schema</span> <span class="o">=</span> <span class="n">BooleanSchema</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test Datastream Boolean&quot;</span><span class="p">,</span> <span class="n">definition</span><span class="o">=</span><span class="s2">&quot;http://test.com/Boolean&quot;</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;testboolean&quot;</span><span class="p">)</span>
+<span class="n">datarecord_schema</span> <span class="o">=</span> <span class="n">SWEDatastreamSchema</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="n">JSONEncoding</span><span class="p">(),</span> <span class="n">obs_format</span><span class="o">=</span><span class="n">ObservationFormat</span><span class="o">.</span><span class="n">SWE_JSON</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                        <span class="n">record_schema</span><span class="o">=</span><span class="n">DataRecordSchema</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;Test Datastream Record&quot;</span><span class="p">,</span>
+                                                                       <span class="n">definition</span><span class="o">=</span><span class="s2">&quot;http://test.com/Record&quot;</span><span class="p">,</span>
+                                                                       <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">time_schema</span><span class="p">,</span> <span class="n">bool_schema</span><span class="p">]))</span>
+
+<span class="n">datastream_body</span> <span class="o">=</span> <span class="n">DatastreamBodyJSON</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Test Datastream&quot;</span><span class="p">,</span> <span class="n">output_name</span><span class="o">=</span><span class="s2">&quot;Test Output #1&quot;</span><span class="p">,</span> <span class="n">datastream_schema</span><span class="o">=</span><span class="n">datarecord_schema</span><span class="p">)</span>
+<span class="n">temp_test_json</span> <span class="o">=</span> <span class="n">datastream_body</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">resp</span> <span class="o">=</span> <span class="n">Datastreams</span><span class="o">.</span><span class="n">add_datastreams_to_system</span><span class="p">(</span><span class="n">server_url</span><span class="p">,</span> <span class="n">retrieved_systems</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+                                             <span class="n">datastream_body</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                             <span class="n">headers</span><span class="o">=</span><span class="n">json_headers</span><span class="p">)</span>
+
+<span class="n">the_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;Z&#39;</span>
+<span class="n">time_millis</span> <span class="o">=</span> <span class="n">test_time_start</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span>
+
+<span class="n">obs</span> <span class="o">=</span> <span class="n">ObservationOMJSONInline</span><span class="p">(</span><span class="n">phenomenon_time</span><span class="o">=</span><span class="n">the_time</span><span class="p">,</span>
+                              <span class="n">result_time</span><span class="o">=</span><span class="n">the_time</span><span class="p">,</span>
+                              <span class="n">result</span><span class="o">=</span><span class="p">{</span>
+                                  <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">time_millis</span><span class="p">,</span>
+                                  <span class="s2">&quot;testboolean&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                              <span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Observation: </span><span class="si">{</span><span class="n">obs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="w"> </span><span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">resp</span> <span class="o">=</span> <span class="n">Observations</span><span class="o">.</span><span class="n">add_observations_to_datastream</span><span class="p">(</span><span class="n">server_url</span><span class="p">,</span> <span class="n">ds_id</span><span class="p">,</span>
+                                                   <span class="n">obs</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">by_alias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+                                                   <span class="n">headers</span><span class="o">=</span><span class="n">json_headers</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="ConSys4Py Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pydocs.html" class="btn btn-neutral float-right" title="ConSys4Py API Docs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Botts Innovative Research, Inc..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
